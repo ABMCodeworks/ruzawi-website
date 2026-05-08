@@ -1,0 +1,22 @@
+{
+    "name": "Ruzawi School",
+    "short_name": "Ruzawi",
+    "description": "Ruzawi School is a co-educational Anglican preparatory boarding school near Marondera, Zimbabwe.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#f6f1e7",
+    "theme_color": "#47778D",
+    "icons": [
+        {
+            "src": "/images/ruzawi-logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/ruzawi-logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
