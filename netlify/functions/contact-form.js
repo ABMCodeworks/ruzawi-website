@@ -6,10 +6,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
 const ENQUIRY_DESTINATIONS = {
-  general: "admin@ruzawi.com",
-  other: "admin@ruzawi.com",
-  admissions: "registrar@ruzawi.com",
-  "job-application": "jobs@ruzawi.com",
+  general: "administrator@ruzawi.com",
+  other: "administrator@ruzawi.com",
+  admissions: "administrator@ruzawi.com",
+  "job-application": "administrator@ruzawi.com",
 };
 
 const ENQUIRY_LABELS = {

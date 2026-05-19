@@ -45,12 +45,7 @@ const contactCards = [
     href: "mailto:registrar@ruzawi.com",
     icon: FaEnvelope,
   },
-  {
-    title: "Job Applications",
-    value: "jobs@ruzawi.com",
-    href: "mailto:jobs@ruzawi.com",
-    icon: FaEnvelope,
-  },
+
   {
     title: "Location",
     value: "Marondera, Zimbabwe",
