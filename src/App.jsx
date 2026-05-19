@@ -85,6 +85,7 @@ export default function App() {
           element={<JuniorMastersApplicationPage />}
         />
       </Routes>
+      <Route path="*" element={<NotFoundPage />} />
     </BrowserRouter>
   );
 }
