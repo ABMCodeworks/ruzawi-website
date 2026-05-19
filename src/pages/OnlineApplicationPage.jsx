@@ -95,6 +95,17 @@ function SelectInput({ label, name, required = false, children }) {
   );
 }
 
+function GuardianTitleSelect({ label, name, required = false }) {
+  return (
+    <SelectInput label={label} name={name} required={required}>
+      <option value="">Select</option>
+      <option>Father</option>
+      <option>Mother</option>
+      <option>Guardian</option>
+    </SelectInput>
+  );
+}
+
 function FileInput({
   label,
   name,
@@ -554,6 +565,7 @@ export default function OnlineApplicationPage() {
                     name="birth_certificate_copy"
                     accept="image/*,.pdf"
                     multiple
+                    required
                     helper="You can upload up to 3 files."
                   />
 
@@ -602,6 +614,8 @@ export default function OnlineApplicationPage() {
                     NB: A confirmation email will be sent to both
                     Parent/Guardian email addresses entered below.
                   </p>
+
+                  <ApplicationProcessNotice />
                 </div>
 
                 <TextArea
@@ -618,7 +632,7 @@ export default function OnlineApplicationPage() {
                     </h3>
 
                     <div className="space-y-5">
-                      <TextInput
+                      <GuardianTitleSelect
                         label="Title"
                         name="guardian1_title"
                         required
@@ -659,7 +673,7 @@ export default function OnlineApplicationPage() {
                     </h3>
 
                     <div className="space-y-5">
-                      <TextInput
+                      <GuardianTitleSelect
                         label="Title"
                         name="guardian2_title"
                         required
@@ -818,14 +832,21 @@ export default function OnlineApplicationPage() {
                   <TextInput
                     label="Legal Custodian of Child"
                     name="legal_custodian"
+                    required
                   />
 
-                  <TextInput label="Date" name="signature_date" type="date" />
+                  <TextInput
+                    label="Date"
+                    name="signature_date"
+                    type="date"
+                    required
+                  />
 
                   <TextInput
                     label="Capacity of Signatory"
                     name="capacity_of_signatory"
                     placeholder="i.e. Parent/Guardian"
+                    required
                   />
                 </div>
               </section>
