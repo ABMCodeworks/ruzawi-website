@@ -5,26 +5,21 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
-const APPLICATION_PARENT_MESSAGE = `
-Good day
+const APPLICATION_BACKEND_ENDPOINT =
+  process.env.APPLICATION_BACKEND_ENDPOINT ||
+  "https://web09823.ruzawi.com/api/applications";
 
-Thank you very much, your application submission has been successful.
-
-Assessments are the next stage in the process and will only happen if:
-1) The application process is complete.
-2) There are spaces available both in the classroom and dormitory for the specified year group.
-
-NB: If there are no spaces available, your application will go on a waiting list. As this procedure is automated, a follow-up phone call is not necessary. You will be contacted if an assessment is required at any stage.
-
-If this application is for our natural intake years of Grade 1 and Grade 3, you will be invited to an Open Day, possibly followed by an assessment.
-
-Assessments for Grade 1 and Grade 3 happen in the year prior to the year that you have applied for.
-`.trim();
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
 
 function jsonResponse(statusCode, body) {
   return {
     statusCode,
     headers: {
+      ...CORS_HEADERS,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
@@ -58,13 +53,22 @@ function uniqueEmails(emails = []) {
     });
 }
 
+function getContentType(event) {
+  return event.headers["content-type"] || event.headers["Content-Type"] || "";
+}
+
+function getBodyBuffer(event) {
+  return event.isBase64Encoded
+    ? Buffer.from(event.body || "", "base64")
+    : Buffer.from(event.body || "", "utf8");
+}
+
 function parseMultipartForm(event) {
   return new Promise((resolve, reject) => {
     const fields = {};
     const files = [];
 
-    const contentType =
-      event.headers["content-type"] || event.headers["Content-Type"];
+    const contentType = getContentType(event);
 
     if (!contentType) {
       reject(new Error("Missing content-type header."));
@@ -114,11 +118,7 @@ function parseMultipartForm(event) {
       });
     });
 
-    const bodyBuffer = event.isBase64Encoded
-      ? Buffer.from(event.body || "", "base64")
-      : Buffer.from(event.body || "", "utf8");
-
-    busboy.end(bodyBuffer);
+    busboy.end(getBodyBuffer(event));
   });
 }
 
@@ -171,6 +171,41 @@ async function verifyRecaptcha(token, expectedAction = "") {
 
   return {
     ok: true,
+  };
+}
+
+async function forwardApplicationToBackend(event) {
+  const contentType = getContentType(event);
+  const bodyBuffer = getBodyBuffer(event);
+
+  if (!contentType) {
+    throw new Error("Missing content-type header.");
+  }
+
+  const response = await fetch(APPLICATION_BACKEND_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": contentType,
+    },
+    body: bodyBuffer,
+  });
+
+  const text = await response.text();
+
+  let result = {};
+
+  try {
+    result = text ? JSON.parse(text) : {};
+  } catch {
+    result = {
+      message: text || "Backend returned a non-JSON response.",
+    };
+  }
+
+  return {
+    ok: response.ok,
+    status: response.status,
+    result,
   };
 }
 
@@ -268,7 +303,7 @@ Ruzawi School
   };
 }
 
-function buildAdminEmail(fields) {
+function buildAdminEmail(fields, backendResult) {
   const studentName = [
     clean(fields.student_name),
     clean(fields.student_middlename),
@@ -286,9 +321,12 @@ function buildAdminEmail(fields) {
   const safeGuardian1 = escapeHtml(fields.guardian1_email || "Not provided");
   const safeGuardian2 = escapeHtml(fields.guardian2_email || "Not provided");
   const safeStart = escapeHtml(requiredEntry || "Not provided");
+  const safeBackendMessage = escapeHtml(
+    backendResult?.message || "Application submitted to backend successfully.",
+  );
 
   const text = `
-New online application confirmation submitted
+New online application submitted
 
 Child: ${studentName || "Not provided"}
 Grade: ${fields.grade || "Not provided"}
@@ -296,11 +334,14 @@ Required entry: ${requiredEntry || "Not provided"}
 
 Guardian 1 Email: ${fields.guardian1_email || "Not provided"}
 Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
+
+Backend result:
+${backendResult?.message || "Application submitted to backend successfully."}
 `.trim();
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #10251c;">
-      <h2 style="color: #00582C;">New Online Application Confirmation</h2>
+      <h2 style="color: #00582C;">New Online Application Submitted</h2>
 
       <p><strong>Child:</strong> ${safeStudentName}</p>
       <p><strong>Grade:</strong> ${safeGrade}</p>
@@ -310,6 +351,10 @@ Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
 
       <p><strong>Guardian 1 Email:</strong> ${safeGuardian1}</p>
       <p><strong>Guardian 2 Email:</strong> ${safeGuardian2}</p>
+
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
+
+      <p><strong>Backend result:</strong> ${safeBackendMessage}</p>
     </div>
   `;
 
@@ -321,9 +366,11 @@ Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
 
 export async function handler(event) {
   if (event.httpMethod === "OPTIONS") {
-    return jsonResponse(200, {
-      message: "OK",
-    });
+    return {
+      statusCode: 204,
+      headers: CORS_HEADERS,
+      body: "",
+    };
   }
 
   if (event.httpMethod !== "POST") {
@@ -383,6 +430,7 @@ export async function handler(event) {
     if (missingField) {
       return jsonResponse(400, {
         message: "Please complete all required application fields.",
+        missingField,
       });
     }
 
@@ -391,6 +439,19 @@ export async function handler(event) {
     if (!recaptcha.ok) {
       return jsonResponse(400, {
         message: recaptcha.reason,
+      });
+    }
+
+    const backendResponse = await forwardApplicationToBackend(event);
+
+    if (!backendResponse.ok) {
+      console.error("Application backend failed:", backendResponse.result);
+
+      return jsonResponse(backendResponse.status || 500, {
+        message:
+          backendResponse.result?.message ||
+          "The application could not be submitted to the application database.",
+        backend: backendResponse.result,
       });
     }
 
@@ -412,12 +473,12 @@ export async function handler(event) {
     if (guardianSendResult.error) {
       throw new Error(
         guardianSendResult.error.message ||
-          "Could not send confirmation email.",
+          "Application was submitted, but the confirmation email could not be sent.",
       );
     }
 
     if (process.env.APPLICATION_ADMIN_EMAIL) {
-      const adminEmail = buildAdminEmail(fields);
+      const adminEmail = buildAdminEmail(fields, backendResponse.result);
 
       const adminSendResult = await resend.emails.send({
         from:
@@ -438,15 +499,15 @@ export async function handler(event) {
     }
 
     return jsonResponse(200, {
-      message: "Application confirmation email sent.",
+      message: "Application submitted and confirmation email sent.",
+      backend: backendResponse.result,
     });
   } catch (error) {
     console.error("Application confirmation error:", error);
 
     return jsonResponse(500, {
       message:
-        error.message ||
-        "There was a problem sending the application confirmation email.",
+        error.message || "There was a problem submitting the application.",
     });
   }
 }
