@@ -88,17 +88,17 @@ export default function WelcomeHeadmasterPage() {
 
               <div className="mt-8 space-y-6 text-lg leading-9 text-[#35443a]">
                 <p>
-                  As Headmaster of Ruzawi School, I believe that we never stop
-                  learning. As educators, we must continually strive to take
-                  ourselves and our pupils to places we have not yet been. As
-                  captured in our school anthem, “Built on the Rock of Faith in
-                  Christ,” we strive to ensure that all we do at Ruzawi is
+                  As captured in our school anthem, “Built on the Rock of Faith
+                  in Christ,” we strive to ensure that all we do at Ruzawi is
                   grounded in this foundation and guided by our core values.
                   This values-based approach enables our school community to
                   grow on a strong and positive footing, where every boy and
                   girl is given the opportunity to flourish. We aim to equip
                   each child with a moral compass that will serve them well
-                  beyond their years at Ruzawi.
+                  beyond their years at Ruzawi. As Headmaster of Ruzawi School,
+                  I believe that we never stop learning. As educators, we must
+                  continually strive to take ourselves and our pupils to places
+                  we have not yet been.
                 </p>
 
                 <p>
@@ -116,7 +116,7 @@ export default function WelcomeHeadmasterPage() {
                   teaching and learning. The strength of our community is
                   central to all we do and by fostering meaningful partnerships
                   between staff, pupils and parents we sustain a nurturing
-                  boarding environment that is both structured and homely.
+                  boarding environment that is both structured and homely.{" "}
                 </p>
 
                 <p>

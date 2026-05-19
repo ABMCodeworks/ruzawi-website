@@ -5,6 +5,7 @@ const pageSectionMap = {
   "Why Ruzawi": "/why-ruzawi",
   "Tradition at Ruzawi": "/tradition-at-ruzawi",
   Governance: "/governance",
+  Staff: "/staff",
   "Junior Masters & Mistresses": "/junior-masters-and-mistresses",
 
   "Ruzawi Magazines": "/magazines",
@@ -24,6 +25,7 @@ const pageSectionMap = {
   "Kipper Department": "/academic-life#kipper-department",
   "Subject Teaching": "/academic-life#subject-teaching",
   "Ruzawi Library": "/academic-life#ruzawi-library",
+  "Outdoor Education": "/academic-life#outdoor-education",
 
   "Dorm Life": "/boarding-life#dorm-life",
   "Kitchen, Housekeeping & Laundry":
@@ -36,13 +38,12 @@ const pageSectionMap = {
   "Charities We Support": "/school-life#charities-we-support",
   "Leadership at Ruzawi": "/school-life#leadership-at-ruzawi",
   "Learning Knights Award": "/school-life#learning-knights-award",
-  "Outdoor Education": "/school-life#outdoor-education",
   "RuzChats, Life Skills and The Chat Room":
     "/school-life#ruzchats-life-skills-and-the-chat-room",
   "World Peace Games": "/school-life#world-peace-games",
 
   "Sport at Ruzawi": "/sports-and-clubs#sport-at-ruzawi",
-  Clubs: "/sports-and-clubs#clubs",
+  "Clubs & Culture": "/sports-and-clubs#clubs",
 
   "Ruzawi Projects & Venture Capital": "/projects-and-venture-capital",
 };

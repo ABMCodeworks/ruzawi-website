@@ -285,11 +285,10 @@ export default function OnlineApplicationPage() {
         {status.message && (
           <section className="mx-auto max-w-[1200px] px-6 pt-10 lg:px-8">
             <div
-              className={`rounded-[2rem] p-6 text-lg font-semibold shadow-sm ring-1 ring-black/5 ${
-                status.type === "success"
+              className={`rounded-[2rem] p-6 text-lg font-semibold shadow-sm ring-1 ring-black/5 ${status.type === "success"
                   ? "bg-[#00582C] text-white"
                   : "bg-red-50 text-red-800"
-              }`}
+                }`}
             >
               {status.message}
             </div>
@@ -344,7 +343,7 @@ export default function OnlineApplicationPage() {
                     <li>
                       Medical aid is mandatory for pupils attending Ruzawi.
                     </li>
-                    <li>Our current fees are US$5400-00.</li>
+                    <li>Our current all-inclusive fee is US$5450-00.</li>
                     <li>
                       Please use a payment reference such as Surname/Year of
                       enrolment, for example Hale26.

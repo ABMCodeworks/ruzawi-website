@@ -11,7 +11,7 @@ const sportsTabs = [
   },
   {
     id: "clubs",
-    label: "Clubs",
+    label: "Clubs & Culture",
   },
 ];
 
@@ -36,6 +36,7 @@ const sportsCards = [
 
 const staffLedClubs = [
   "Birding",
+  "Drama",
   "Sewing",
   "African Board Games",
   "Sign Language",
@@ -215,18 +216,16 @@ export default function SportsClubsPage() {
                     <button
                       key={tab.id}
                       onClick={() => handleTabClick(tab.id)}
-                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${
-                        isActive
+                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${isActive
                           ? "bg-[#47778D] text-white shadow-md"
                           : "bg-[#f6f1e7] text-[#00582C] hover:bg-[#B6D7E7]"
-                      }`}
+                        }`}
                     >
                       <span>{tab.label}</span>
 
                       <span
-                        className={`ml-3 shrink-0 transition ${
-                          isActive ? "translate-x-1" : ""
-                        }`}
+                        className={`ml-3 shrink-0 transition ${isActive ? "translate-x-1" : ""
+                          }`}
                       >
                         →
                       </span>
@@ -264,20 +263,19 @@ export default function SportsClubsPage() {
                     <p>
                       Sport at Ruzawi is designed to accommodate children with
                       different sporting abilities. Our Kippers, which are the
-                      Grade One and Grade Two children, follow a fun and
-                      engaging sports programme that includes tennis, cricket,
-                      tag rugby and dance. The emphasis at this stage is
-                      enjoyment, participation and the development of basic
-                      skills.
+                      Grade One and Two children, follow a fun and engaging
+                      sports programme that includes tennis, cricket, tag rugby
+                      and dance. The emphasis at this stage is enjoyment,
+                      participation and the development of basic skills. The
+                      main focus is to give children a basic understanding of
+                      the different sporting disciplines they will participate
+                      in from Grade Three and beyond.
                     </p>
 
                     <p>
                       We host a Grade One and Two Tag Rugby Tournament where
-                      children are placed into random teams, creating an
-                      atmosphere of excitement and fun. The main focus is to
-                      give children a basic understanding of the different
-                      sporting disciplines they will participate in from Grade
-                      Three and beyond.
+                      children are placed into mixed teams with other schools,
+                      creating an atmosphere of excitement and fun.{" "}
                     </p>
                   </div>
                 </div>
@@ -304,12 +302,7 @@ export default function SportsClubsPage() {
                   <p>
                     Pupils selected for First Teams have the opportunity to tour
                     South Africa annually, gaining valuable exposure and
-                    experience. A wide range of clubs is offered on Monday and
-                    Thursday afternoons, allowing children to explore additional
-                    interests. These include golf, sailing, karate, splash ball,
-                    soccer, shooting, girls’ cricket and horse riding. Our
-                    golfers also enjoy an annual tour to Leopard Rock, which is
-                    a highlight of the sporting calendar.
+                    experience.
                   </p>
 
                   <p>
@@ -321,7 +314,7 @@ export default function SportsClubsPage() {
                   </p>
 
                   <p>
-                    Above all, sport at Ruzawi aims to instil lifelong values.
+                    Above all, sport at Ruzawi aims to instill lifelong values.
                     Children are taught to win with humility, lose with grace
                     and approach every challenge with determination and
                     integrity. The lessons learned on the sports field often
@@ -352,7 +345,7 @@ export default function SportsClubsPage() {
               className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
-                Clubs
+                Clubs & Culture
               </p>
 
               <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#00582C] md:text-5xl">
@@ -410,6 +403,12 @@ export default function SportsClubsPage() {
                   academic and physical activities. For the senior grades,
                   additional age-appropriate opportunities are included, such as
                   Sailing.
+                </p>
+                <p>
+                  Each year, Ruzawi hosts two school plays: a Nativity play
+                  performed by the Kippers and a senior school play. Children
+                  also have opportunities to perform Chapel skits during Friday
+                  Assemblies.
                 </p>
               </div>
 

@@ -21,7 +21,7 @@ export default function WhyRuzawiPage() {
   return (
     <div className="bg-[#f6f1e7] text-[#10251c]">
       <SEO
-        title="Why Ruzawi"
+        title="Why Ruzawi?"
         description="Discover why Ruzawi School is a family-centred preparatory boarding school near Marondera, Zimbabwe, built on faith, care, character and holistic education."
         path="/why-ruzawi"
         image="/images/why-ruzawi-hero.webp"
@@ -40,7 +40,7 @@ export default function WhyRuzawiPage() {
 
           <div className="relative z-10 flex min-h-[72vh] max-w-5xl flex-col items-start justify-center px-6 pt-28 lg:ml-12 lg:px-8 xl:ml-20">
             <p className="mb-5 text-sm font-bold uppercase tracking-[0.32em] text-[#B6D7E7]">
-              Why Ruzawi
+              Why Ruzawi?
             </p>
 
             <h1 className="max-w-4xl font-serif text-5xl font-semibold leading-[1.08] text-white md:text-6xl lg:text-7xl">
@@ -56,13 +56,19 @@ export default function WhyRuzawiPage() {
 
         <section className="w-full bg-[#47778D] px-6 py-8 text-center text-white lg:px-8">
           <div className="mx-auto max-w-7xl">
-            <p className="font-serif text-xl leading-relaxed md:text-2xl lg:text-3xl">
-              “There is a special feeling when you enter Ruzawi”
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#B6D7E7]">
+              Parent Testimonials
             </p>
 
-            <p className="mt-3 text-xs font-bold uppercase tracking-[0.24em] text-[#B6D7E7]">
-              Something far beyond what you see on an open day
-            </p>
+            <div className="mt-5 space-y-4">
+              <p className="font-serif text-xl leading-relaxed md:text-2xl lg:text-3xl">
+                “There is a special feeling when you enter Ruzawi”
+              </p>
+
+              <p className="font-serif text-xl leading-relaxed md:text-2xl lg:text-3xl">
+                “Something far beyond what you see on an open day”
+              </p>
+            </div>
           </div>
         </section>
 
@@ -97,32 +103,28 @@ export default function WhyRuzawiPage() {
               {reasons.map((reason, index) => (
                 <article
                   key={reason.title}
-                  className={`rounded-[2rem] p-8 shadow-sm ring-1 ring-black/5 md:p-10 ${
-                    index === 1
+                  className={`rounded-[2rem] p-8 shadow-sm ring-1 ring-black/5 md:p-10 ${index === 1
                       ? "bg-[#00582C] text-white"
                       : "bg-white text-[#10251c]"
-                  }`}
+                    }`}
                 >
                   <p
-                    className={`text-sm font-bold uppercase tracking-[0.26em] ${
-                      index === 1 ? "text-[#B6D7E7]" : "text-[#47778D]"
-                    }`}
+                    className={`text-sm font-bold uppercase tracking-[0.26em] ${index === 1 ? "text-[#B6D7E7]" : "text-[#47778D]"
+                      }`}
                   >
                     Reason {index + 1}
                   </p>
 
                   <h2
-                    className={`mt-4 font-serif text-4xl font-semibold leading-tight md:text-5xl ${
-                      index === 1 ? "text-white" : "text-[#00582C]"
-                    }`}
+                    className={`mt-4 font-serif text-4xl font-semibold leading-tight md:text-5xl ${index === 1 ? "text-white" : "text-[#00582C]"
+                      }`}
                   >
                     {reason.title}
                   </h2>
 
                   <p
-                    className={`mt-6 text-lg leading-9 ${
-                      index === 1 ? "text-white/85" : "text-[#35443a]"
-                    }`}
+                    className={`mt-6 text-lg leading-9 ${index === 1 ? "text-white/85" : "text-[#35443a]"
+                      }`}
                   >
                     {reason.body}
                   </p>

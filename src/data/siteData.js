@@ -30,9 +30,10 @@ export const menuGroups = [
     title: "Discover Ruzawi",
     links: [
       "Welcome from the Headmaster",
-      "Why Ruzawi",
+      "Why Ruzawi?",
       "Tradition at Ruzawi",
       "Governance",
+      "Staff",
     ],
   },
   {
@@ -42,6 +43,7 @@ export const menuGroups = [
       "Curriculum Support",
       "Kipper Department",
       "Subject Teaching",
+      "Outdoor Education",
       "Ruzawi Library",
     ],
   },
@@ -62,14 +64,13 @@ export const menuGroups = [
       "Charities We Support",
       "Leadership at Ruzawi",
       "Learning Knights Award",
-      "Outdoor Education",
       "RuzChats, Life Skills and The Chat Room",
       "World Peace Games",
     ],
   },
   {
-    title: "Sport & Clubs",
-    links: ["Sport at Ruzawi", "Clubs"],
+    title: "Sports & Clubs",
+    links: ["Sport at Ruzawi", "Clubs & Culture"],
   },
   {
     title: "Future Development",
@@ -88,7 +89,7 @@ export const quickLinks = [
     image: "/images/boarding-life.webp",
   },
   {
-    title: "Sport & Clubs",
+    title: "Sports & Clubs",
     href: "/sport-at-ruzawi",
     image: "/images/sport.webp",
   },

@@ -21,10 +21,7 @@ const schoolLifeTabs = [
     id: "learning-knights-award",
     label: "Learning Knights Award",
   },
-  {
-    id: "outdoor-education",
-    label: "Outdoor Education",
-  },
+
   {
     id: "ruzchats-life-skills-and-the-chat-room",
     label: "RuzChats, Life Skills and The Chat Room",
@@ -79,7 +76,7 @@ const charities = [
   {
     title: "Centre for Total Transformation",
     body: [
-      "The Centre for Total Transformation, or CTT, is an orphanage in Harare that supports children through their schooling. Towards the end of the year, Ruzawi collects clothing, stationery and furniture which are delivered to CTT.",
+      "The Centre for Total Transformation, or CTT, is a school for disadvantaged children in Harare that supports children through their schooling. Over the course of the last few years, Ruzawi has collected clothing, stationery and furniture which are delivered to CTT.",
       "Pupils taking part in the Learning Knights Award help to deliver these donations at the end of the year, reinforcing the value of service and the impact of practical support.",
     ],
   },
@@ -235,18 +232,16 @@ export default function SchoolLifePage() {
                     <button
                       key={tab.id}
                       onClick={() => handleTabClick(tab.id)}
-                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${
-                        isActive
+                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${isActive
                           ? "bg-[#47778D] text-white shadow-md"
                           : "bg-[#f6f1e7] text-[#00582C] hover:bg-[#B6D7E7]"
-                      }`}
+                        }`}
                     >
                       <span>{tab.label}</span>
 
                       <span
-                        className={`ml-3 shrink-0 transition ${
-                          isActive ? "translate-x-1" : ""
-                        }`}
+                        className={`ml-3 shrink-0 transition ${isActive ? "translate-x-1" : ""
+                          }`}
                       >
                         →
                       </span>
@@ -265,7 +260,7 @@ export default function SchoolLifePage() {
               <div className="grid gap-0 lg:grid-cols-[1fr_1fr]">
                 <div className="p-8 md:p-10">
                   <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
-                    Chapel
+                    Chapel & Assembly
                   </p>
 
                   <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#00582C] md:text-5xl">
@@ -282,15 +277,15 @@ export default function SchoolLifePage() {
                     </p>
 
                     <p>
-                      Children attend Chapel regularly and services are designed
-                      to be meaningful, inclusive and age appropriate. Through
+                      Children attend Chapel daily and services are designed to
+                      be meaningful, inclusive and age appropriate. Through
                       prayer, scripture, hymns and thoughtful messages, pupils
                       are encouraged to reflect on their actions, consider their
                       relationships with others and grow in faith and character.
                     </p>
 
                     <p>
-                      Chapel services also provide an opportunity to celebrate
+                      School Assemblies also provide an opportunity to celebrate
                       achievements, mark important moments in the school
                       calendar and come together as a community.
                     </p>
@@ -445,7 +440,7 @@ export default function SchoolLifePage() {
                     Senior Monitors are selected during the Second Term after
                     all members of staff have had the opportunity to share their
                     views. Once appointed, monitors are allocated classes to
-                    support and specific roles to fulfil. Each receives a
+                    support and have specific roles to fulfil. Each receives a
                     leadership file containing relevant information and attends
                     weekly meetings with the Deputy Head and senior staff to
                     discuss responsibilities and experiences.
@@ -554,70 +549,6 @@ export default function SchoolLifePage() {
             </section>
 
             <section
-              id="outdoor-education"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
-            >
-              <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
-                <div className="min-h-[620px]">
-                  <img
-                    src="/images/outdoor-education.webp"
-                    alt="Outdoor Education at Ruzawi"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-
-                <div className="p-8 md:p-10">
-                  <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
-                    Outdoor Education
-                  </p>
-
-                  <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#00582C] md:text-5xl">
-                    Learning from the natural world
-                  </h2>
-
-                  <div className="mt-8 space-y-6 text-lg leading-9 text-[#35443a]">
-                    <p>
-                      Blessed with a beautiful estate, Ruzawi is in a unique
-                      position to offer Outdoor Education to its pupils. With
-                      abundant bird life, many indigenous tree species and the
-                      varied ecosystems provided by the dam, the opportunities
-                      for learning are extensive. Outdoor Education also plays
-                      an important role in supplementing and supporting lessons
-                      taught in the classroom.
-                    </p>
-
-                    <p>
-                      The emphasis of the programme is not on children being
-                      able to identify every bird, tree or living creature that
-                      calls Ruzawi home, but rather on creating an awareness and
-                      appreciation of the natural world. This awareness often
-                      sparks curiosity and leads to a deeper interest in nature,
-                      which in turn fosters a desire to care for and protect the
-                      environment both at school and at home.
-                    </p>
-
-                    <p>
-                      Through Outdoor Education, children begin to understand
-                      that they can have a positive impact on their
-                      surroundings. In many cases, they take this learning
-                      beyond the school gates, encouraging greater awareness and
-                      responsibility among adults and parents. They may even
-                      teach others that littering is simply not acceptable.
-                    </p>
-
-                    <p>
-                      The children’s excitement and enthusiasm for being
-                      outdoors is often enough to demonstrate the value of this
-                      programme. Outdoor Education is an important part of the
-                      Ruzawi curriculum and one that we continue to nurture and
-                      develop.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section
               id="ruzchats-life-skills-and-the-chat-room"
               className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
@@ -637,12 +568,13 @@ export default function SchoolLifePage() {
 
                   <p className="mt-6 text-lg leading-9 text-[#35443a]">
                     RuzChats are held twice a term and offer parents the
-                    opportunity to engage with a range of relevant topics. Guest
-                    speakers are invited to share practical advice, professional
-                    insight and lived experience, creating a supportive space
-                    for discussion and reflection. These sessions strengthen the
-                    partnership between home and school and reinforce the shared
-                    responsibility of raising confident, resilient children.
+                    opportunity to engage with a range of relevant parenting and
+                    life skill topics. Guest speakers are invited to share
+                    practical advice, professional insight and lived experience,
+                    creating a supportive space for discussion and reflection.
+                    These sessions strengthen the partnership between home and
+                    school and reinforce the shared responsibility of raising
+                    confident, resilient children.
                   </p>
                 </article>
 
@@ -669,8 +601,8 @@ export default function SchoolLifePage() {
 
                   <p className="mt-6 text-lg leading-9 text-[#35443a]">
                     The Chat Room provides a safe and welcoming space where
-                    children can speak openly and confidentially with the school
-                    counsellor. It plays an important role in supporting pupils
+                    children can speak openly and confidentially with the School
+                    Counsellor. It plays an important role in supporting pupils
                     through emotional, social and personal challenges. Whether
                     children need a listening ear, guidance or reassurance, the
                     Chat Room offers a calm environment where they feel heard,

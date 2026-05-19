@@ -21,6 +21,10 @@ const academicTabs = [
     label: "Subject Teaching",
   },
   {
+    id: "outdoor-education",
+    label: "Outdoor Education",
+  },
+  {
     id: "ruzawi-library",
     label: "Ruzawi Library",
   },
@@ -56,9 +60,16 @@ const subjectAreas = [
     ],
   },
   {
+    title: "Bible Life Skills",
+    body: [
+      "The aim of our Bibles Life Skills programme is to practically apply the lessons and principles taught in the Bible to everyday living – to be “Built on the rock of faith in Christ,” it should show in how we go about our “business”. We seek to do life well and we believe there is not better foundation than God’s Word.",
+      "Junior classes have discussion lessons which expand on the bi-weekly pastoral care school theme, with simple periodic notes to serve as a reminder. Senior classes have a separate curriculum which is explored more formally, incorporating written work, mark orders and reports, as with all other subjects. These lessons seek to enhance the school’s Christian ethos by bringing our faith to life in real and meaningful ways.",
+    ],
+  },
+  {
     title: "Music",
     body: [
-      "The Music Department is a space where every child at Ruzawi is encouraged to discover the joy of musical expression. It offers pupils an opportunity to step away from the busyness of academic life and immerse themselves in creativity through music, movement and performance.",
+      "The Music Department is a space where every child at Ruzawi is encouraged to discover the joy of musical expression. It offers pupils an opportunity to step away from the busy-ness of academic life and immerse themselves in creativity through music, movement and performance.",
       "Our music curriculum encompasses a variety of elements including class music lessons, individual instrumental tuition and opportunities to participate in bands and group ensembles. Children may choose any instrument and those who have developed sufficient skills through class music or individual lessons are encouraged to showcase their abilities through ensemble and group work.",
       "Music at Ruzawi plays an important role in building confidence, discipline and collaboration. Whether performing together, learning a new instrument or exploring rhythm and movement, pupils are supported in developing both their musical ability and their appreciation of music as a lifelong skill and source of enjoyment.",
     ],
@@ -329,7 +340,7 @@ export default function AcademicLifePage() {
                     in all areas of school life. Occupational Therapy sessions
                     are offered daily and a specialist consultant visits the
                     school once a term. A Speech Therapist comes to the school
-                    biweekly to assess children and implement therapy where
+                    fortnightly to assess children and implement therapy where
                     required.
                   </p>
 
@@ -472,6 +483,69 @@ export default function AcademicLifePage() {
                 ))}
               </div>
             </section>
+            <section
+              id="outdoor-education"
+              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+            >
+              <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
+                <div className="min-h-[620px]">
+                  <img
+                    src="/images/outdoor-education.webp"
+                    alt="Outdoor Education at Ruzawi"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+
+                <div className="p-8 md:p-10">
+                  <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
+                    Outdoor Education
+                  </p>
+
+                  <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#00582C] md:text-5xl">
+                    Learning from the natural world
+                  </h2>
+
+                  <div className="mt-8 space-y-6 text-lg leading-9 text-[#35443a]">
+                    <p>
+                      Blessed with a beautiful estate, Ruzawi is in a unique
+                      position to offer Outdoor Education to its pupils. With
+                      abundant bird life, many indigenous tree species and the
+                      varied ecosystems provided by the dam, the opportunities
+                      for learning are extensive. Outdoor Education also plays
+                      an important role in supplementing and supporting lessons
+                      taught in the classroom.
+                    </p>
+
+                    <p>
+                      The emphasis of the programme is not on children being
+                      able to identify every bird, tree or living creature that
+                      calls Ruzawi home, but rather on creating an awareness and
+                      appreciation of the natural world. This awareness often
+                      sparks curiosity and leads to a deeper interest in nature,
+                      which in turn fosters a desire to care for and protect the
+                      environment both at school and at home.
+                    </p>
+
+                    <p>
+                      Through Outdoor Education, children begin to understand
+                      that they can have a positive impact on their
+                      surroundings. In many cases, they take this learning
+                      beyond the school gates, encouraging greater awareness and
+                      responsibility among adults and parents. They may even
+                      teach others that littering is simply not acceptable.
+                    </p>
+
+                    <p>
+                      The children’s excitement and enthusiasm for being
+                      outdoors is often enough to demonstrate the value of this
+                      programme. Outdoor Education is an important part of the
+                      Ruzawi curriculum and one that we continue to nurture and
+                      develop.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
 
             <section
               id="ruzawi-library"
@@ -508,11 +582,12 @@ export default function AcademicLifePage() {
                     </p>
 
                     <p>
-                      Library Monitors help to run the space during rest time,
-                      assisting readers with book renewals and ensuring that
-                      everyone is well stocked with reading material. This
-                      allows children to head into the busy afternoon of sport
-                      feeling relaxed, prepared and eager to read.
+                      Grade Seven Library Monitors help to run the space during
+                      rest time, assisting readers with book renewals and
+                      ensuring that everyone is well stocked with reading
+                      material. This allows children to head into the busy
+                      afternoon of sport feeling relaxed, prepared and eager to
+                      read.
                     </p>
                   </div>
                 </div>

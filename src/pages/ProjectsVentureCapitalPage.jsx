@@ -6,24 +6,24 @@ const projectItems = [
   {
     title: "Gum plantation",
     detail: "281 ha",
-    body: "This is an existing project that has been very successfully managed by Curverid over the last 10 years. The lease was renegotiated in 2023 for another 10 years to ensure that the project continues to bring full value to both parties.",
+    body: "This is an existing project that has been very successfully managed by Curverid over the last 10 years. The lease was re-negotiated in 2023 for another 10 years to ensure that the project continues to bring full value to both parties.",
   },
   {
     title: "Cattle project",
     detail: "Ruzawi herd",
-    body: "This project is well underway and the “Ruzawi herd” has settled well into a fenced area on the Ruzawi estate, utilising all the grazing areas of the property. Ruzawi is working closely with a current parent and local farmer who has helped ensure that this project has become a reality. It will take time for the herd to grow, but there is much potential in the next few years for this to benefit the school in a wide variety of areas.",
+    body: "This project is well underway and the “Ruzawi herd” has settled successfully into a fenced area on the Ruzawi estate, utilising all the grazing areas of the property. Ruzawi is working closely with a current parent and local farmer who has helped ensure that this project has become a reality. It will take time for the herd to grow, but there is much potential in the next few years for this to benefit the school in a wide variety of areas.",
   },
   {
     title: "Sale of Ruzawi Estate Land",
     detail: "Education Matters, 93 ha",
     body: "The sale of the land to Education Matters was finally concluded following the successful attainment of a Certificate of No Present Interest from the Zimbabwean Government. The idea is fully aligned to the principles and ethos of our founders, as Education Matters is a non-profit organisation that identifies Zimbabwean gifted children whose families do not have the financial means to educate them. They are educated for their A Level years in Zimbabwe and then the vast majority are placed into red-brick universities in the USA, with the aim of returning to Zimbabwe to give back to the community.",
     extra:
-      "The funds realised from the sale have been used for infrastructural development including upgrading all public toilet facilities, Grade 1 and 2 classroom extensions including reading rooms, the Gibbs girls’ dorm extension with a new wing and an extra 20 beds, complete refurbishment of the Petty Cote Lane flats, completion of Winchester Pavilion, and partial refurbishment of the Headmaster’s Lodge, which is ongoing.",
+      "The funds realised from the sale have been used for infrastructural development including upgrading all public toilet facilities, Grade 1 and 2 classroom extensions including reading rooms, the Gibbs girls’ dorm extension with a new wing and an extra 20 beds, complete refurbishment of the Petticaot Lane flats, completion of Winchester Pavilion and partial refurbishment of the Headmaster’s Lodge, which is ongoing.",
   },
   {
     title: "Solar Park",
     detail: "7 ha, 5MW project",
-    body: "This 5MW project has completed all geotechnical and topographical studies and has now been granted all the necessary approvals, such as GIA and SPV registration. Construction is now aimed to be completed by the end of 2026, following the further granting of Prescribed Asset Status, a Government Project Support Agreement and a Reserve Bank Letter of Comfort. All that remains to be achieved in the remainder of 2025 is project financial close.",
+    body: "This 5MW project has completed all geotechnical and topographical studies and has now been granted all the necessary approvals, such as GIA and SPV registration. Construction is now aimed to be completed by the end of 2026, following the further granting of Prescribed Asset Status, a Government Project Support Agreement and a Reserve Bank Letter of Comfort.",
   },
   {
     title: "Residential eco-estate",
@@ -122,7 +122,7 @@ export default function ProjectsVentureCapitalPage() {
 
             <div className="space-y-6 rounded-[2rem] bg-white p-8 text-lg leading-9 text-[#35443a] shadow-sm ring-1 ring-black/5 md:p-10">
               <p>
-                Ruzawi’s development is guided by a long-term vision that
+                Ruzawi’s development is guided by a long-term vision which
                 ensures the school continues to grow in a thoughtful,
                 sustainable and purposeful manner. The Projects and Venture
                 Capital portfolio exists to support this vision by identifying,
@@ -225,40 +225,35 @@ export default function ProjectsVentureCapitalPage() {
             {projectItems.map((item, index) => (
               <article
                 key={item.title}
-                className={`overflow-hidden rounded-[2rem] shadow-sm ring-1 ring-black/5 ${
-                  index % 2 === 0 ? "bg-white" : "bg-[#00582C] text-white"
-                }`}
+                className={`overflow-hidden rounded-[2rem] shadow-sm ring-1 ring-black/5 ${index % 2 === 0 ? "bg-white" : "bg-[#00582C] text-white"
+                  }`}
               >
                 <div className="grid gap-0 lg:grid-cols-[0.45fr_1fr]">
                   <div
-                    className={`flex flex-col justify-between p-8 md:p-10 ${
-                      index % 2 === 0 ? "bg-[#B6D7E7]" : "bg-[#47778D]"
-                    }`}
+                    className={`flex flex-col justify-between p-8 md:p-10 ${index % 2 === 0 ? "bg-[#B6D7E7]" : "bg-[#47778D]"
+                      }`}
                   >
                     <div>
                       <p
-                        className={`text-sm font-black uppercase tracking-[0.22em] ${
-                          index % 2 === 0 ? "text-[#00582C]" : "text-[#B6D7E7]"
-                        }`}
+                        className={`text-sm font-black uppercase tracking-[0.22em] ${index % 2 === 0 ? "text-[#00582C]" : "text-[#B6D7E7]"
+                          }`}
                       >
                         Project {index + 1}
                       </p>
 
                       <h3
-                        className={`mt-5 font-serif text-4xl font-semibold leading-tight ${
-                          index % 2 === 0 ? "text-[#00582C]" : "text-white"
-                        }`}
+                        className={`mt-5 font-serif text-4xl font-semibold leading-tight ${index % 2 === 0 ? "text-[#00582C]" : "text-white"
+                          }`}
                       >
                         {item.title}
                       </h3>
                     </div>
 
                     <p
-                      className={`mt-8 rounded-full px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] ${
-                        index % 2 === 0
+                      className={`mt-8 rounded-full px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] ${index % 2 === 0
                           ? "bg-white text-[#00582C]"
                           : "bg-white/15 text-white"
-                      }`}
+                        }`}
                     >
                       {item.detail}
                     </p>
@@ -266,9 +261,8 @@ export default function ProjectsVentureCapitalPage() {
 
                   <div className="p-8 md:p-10">
                     <div
-                      className={`space-y-6 text-lg leading-9 ${
-                        index % 2 === 0 ? "text-[#35443a]" : "text-white/85"
-                      }`}
+                      className={`space-y-6 text-lg leading-9 ${index % 2 === 0 ? "text-[#35443a]" : "text-white/85"
+                        }`}
                     >
                       <p>{item.body}</p>
                       {item.extra && <p>{item.extra}</p>}

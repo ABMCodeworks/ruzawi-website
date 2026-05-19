@@ -13,17 +13,42 @@ import SEO from "../components/SEO";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
+const enquiryTypes = [
+  {
+    label: "General Enquiry",
+    value: "general",
+  },
+  {
+    label: "Admissions",
+    value: "admissions",
+  },
+  {
+    label: "Job Application",
+    value: "job-application",
+  },
+  {
+    label: "Other",
+    value: "other",
+  },
+];
+
 const contactCards = [
   {
-    title: "Email",
+    title: "General Enquiries",
     value: "admin@ruzawi.com",
     href: "mailto:admin@ruzawi.com",
     icon: FaEnvelope,
   },
   {
-    title: "Registrar",
+    title: "Admissions",
     value: "registrar@ruzawi.com",
     href: "mailto:registrar@ruzawi.com",
+    icon: FaEnvelope,
+  },
+  {
+    title: "Job Applications",
+    value: "jobs@ruzawi.com",
+    href: "mailto:jobs@ruzawi.com",
     icon: FaEnvelope,
   },
   {
@@ -55,12 +80,14 @@ const socialLinks = [
 export default function ContactPage() {
   const recaptchaRef = useRef(null);
 
+  const [selectedEnquiryType, setSelectedEnquiryType] = useState("");
   const [status, setStatus] = useState({
     type: "",
     message: "",
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isJobApplication = selectedEnquiryType === "job-application";
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -70,28 +97,56 @@ export default function ContactPage() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const payload = {
-      firstName: String(formData.get("firstName") || "").trim(),
-      lastName: String(formData.get("lastName") || "").trim(),
-      email: String(formData.get("email") || "").trim(),
-      phone: String(formData.get("phone") || "").trim(),
-      subject: String(formData.get("subject") || "").trim(),
-      message: String(formData.get("message") || "").trim(),
-      website: String(formData.get("website") || "").trim(),
-    };
+    const firstName = String(formData.get("firstName") || "").trim();
+    const lastName = String(formData.get("lastName") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    const enquiryType = String(formData.get("enquiryType") || "").trim();
+    const message = String(formData.get("message") || "").trim();
+    const website = String(formData.get("website") || "").trim();
 
-    if (
-      !payload.firstName ||
-      !payload.lastName ||
-      !payload.email ||
-      !payload.subject ||
-      !payload.message
-    ) {
+    if (!firstName || !lastName || !email || !enquiryType || !message) {
       setStatus({
         type: "error",
         message: "Please complete all required fields.",
       });
       return;
+    }
+
+    if (isJobApplication) {
+      const cvFile = formData.get("cv");
+
+      if (!cvFile || !cvFile.name) {
+        setStatus({
+          type: "error",
+          message: "Please attach your CV for job applications.",
+        });
+        return;
+      }
+
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+
+      if (!allowedTypes.includes(cvFile.type)) {
+        setStatus({
+          type: "error",
+          message: "Please upload your CV as a PDF, DOC or DOCX file.",
+        });
+        return;
+      }
+
+      const maxFileSize = 5 * 1024 * 1024;
+
+      if (cvFile.size > maxFileSize) {
+        setStatus({
+          type: "error",
+          message: "Please upload a CV smaller than 5MB.",
+        });
+        return;
+      }
     }
 
     try {
@@ -112,15 +167,18 @@ export default function ContactPage() {
         throw new Error("Please complete the reCAPTCHA checkbox.");
       }
 
+      formData.set("firstName", firstName);
+      formData.set("lastName", lastName);
+      formData.set("email", email);
+      formData.set("phone", phone);
+      formData.set("enquiryType", enquiryType);
+      formData.set("message", message);
+      formData.set("website", website);
+      formData.set("recaptchaToken", recaptchaToken);
+
       const response = await fetch("/.netlify/functions/contact-form", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...payload,
-          recaptchaToken,
-        }),
+        body: formData,
       });
 
       const result = await response.json().catch(() => ({}));
@@ -136,6 +194,7 @@ export default function ContactPage() {
       });
 
       form.reset();
+      setSelectedEnquiryType("");
       recaptchaRef.current?.reset();
     } catch (error) {
       recaptchaRef.current?.reset();
@@ -155,7 +214,7 @@ export default function ContactPage() {
     <div className="bg-[#f6f1e7] text-[#10251c]">
       <SEO
         title="Contact Ruzawi School"
-        description="Contact Ruzawi School in Marondera, Zimbabwe, for admissions, general enquiries, boarding enquiries and school information."
+        description="Contact Ruzawi School in Marondera, Zimbabwe, for admissions, general enquiries, job applications and school information."
         path="/contact"
         image="/images/seo-cover.webp"
       />
@@ -187,7 +246,7 @@ export default function ContactPage() {
             </p>
 
             <p className="mt-3 text-xs font-bold uppercase tracking-[0.24em] text-[#B6D7E7]">
-              Admissions, enquiries and general contact
+              Admissions, enquiries and job applications
             </p>
           </div>
         </section>
@@ -354,23 +413,59 @@ export default function ContactPage() {
 
               <label className="block">
                 <span className="mb-2 block text-sm font-bold uppercase tracking-[0.16em] text-[#00582C]">
-                  Subject *
+                  Enquiry Type *
                 </span>
 
                 <select
-                  name="subject"
+                  name="enquiryType"
                   required
+                  value={selectedEnquiryType}
+                  onChange={(event) =>
+                    setSelectedEnquiryType(event.target.value)
+                  }
                   className="w-full rounded-2xl border border-black/10 bg-[#f6f1e7] px-5 py-4 text-[#10251c] outline-none transition focus:border-[#47778D] focus:ring-4 focus:ring-[#B6D7E7]/50"
                 >
                   <option value="">Select an enquiry type</option>
-                  <option>Admissions Enquiry</option>
-                  <option>General Enquiry</option>
-                  <option>Boarding Enquiry</option>
-                  <option>Accounts Enquiry</option>
-                  <option>ROPA / Alumni Enquiry</option>
-                  <option>Other</option>
+                  {enquiryTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
                 </select>
+
+                {selectedEnquiryType && (
+                  <p className="mt-3 text-sm leading-6 text-[#35443a]">
+                    {selectedEnquiryType === "admissions" &&
+                      "Admissions enquiries will be sent to the Registrar."}
+                    {selectedEnquiryType === "job-application" &&
+                      "Job applications will be sent to the jobs inbox."}
+                    {(selectedEnquiryType === "general" ||
+                      selectedEnquiryType === "other") &&
+                      "This enquiry will be sent to the school admin office."}
+                  </p>
+                )}
               </label>
+
+              {isJobApplication && (
+                <label className="block rounded-[2rem] bg-[#f6f1e7] p-6 ring-1 ring-black/5">
+                  <span className="mb-2 block text-sm font-bold uppercase tracking-[0.16em] text-[#00582C]">
+                    Attach CV *
+                  </span>
+
+                  <input
+                    name="cv"
+                    required={isJobApplication}
+                    type="file"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    className="w-full rounded-2xl border border-black/10 bg-white px-5 py-4 text-[#10251c] file:mr-4 file:rounded-full file:border-0 file:bg-[#00582C] file:px-5 file:py-2 file:text-sm file:font-bold file:text-white hover:file:bg-[#47778D]"
+                  />
+
+                  <p className="mt-3 text-sm leading-6 text-[#35443a]">
+                    Please upload your CV as a PDF, DOC or DOCX file. Maximum
+                    file size: 5MB.
+                  </p>
+                </label>
+              )}
 
               <label className="block">
                 <span className="mb-2 block text-sm font-bold uppercase tracking-[0.16em] text-[#00582C]">

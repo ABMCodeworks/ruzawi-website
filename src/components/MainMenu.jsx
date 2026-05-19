@@ -6,7 +6,7 @@ const groupHeadingLinks = {
   "Academic Life": "/academic-life",
   "Boarding Life": "/boarding-life",
   "School Life": "/school-life",
-  "Sport & Clubs": "/sports-and-clubs",
+  "Sports & Clubs": "/sports-and-clubs",
   "Future Development": "/projects-and-venture-capital",
 };
 

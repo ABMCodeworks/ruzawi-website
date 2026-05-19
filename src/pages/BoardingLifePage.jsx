@@ -32,7 +32,7 @@ const boardingCards = [
   },
   {
     title: "Daily Care",
-    body: "Matrons, pastoral staff, the San Sister and the counsellor work together to support each child.",
+    body: "Matrons, pastoral staff, the San Sister and the School Counsellor work together to support each child.",
   },
   {
     title: "Healthy Routines",
@@ -164,18 +164,16 @@ export default function BoardingLifePage() {
                     <button
                       key={tab.id}
                       onClick={() => handleTabClick(tab.id)}
-                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${
-                        isActive
+                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${isActive
                           ? "bg-[#47778D] text-white shadow-md"
                           : "bg-[#f6f1e7] text-[#00582C] hover:bg-[#B6D7E7]"
-                      }`}
+                        }`}
                     >
                       <span>{tab.label}</span>
 
                       <span
-                        className={`ml-3 shrink-0 transition ${
-                          isActive ? "translate-x-1" : ""
-                        }`}
+                        className={`ml-3 shrink-0 transition ${isActive ? "translate-x-1" : ""
+                          }`}
                       >
                         →
                       </span>
@@ -214,7 +212,7 @@ export default function BoardingLifePage() {
                       both structure and fun. Before activities begin, necessary
                       duties are completed, including the distribution of clean
                       laundry, balcony inspections and locker and bed
-                      inspections. These routines help to instil responsibility
+                      inspections. These routines help to instill responsibility
                       and accountability.
                     </p>
 
@@ -267,14 +265,14 @@ export default function BoardingLifePage() {
                     Our matrons provide the structure needed to help children
                     thrive in dormitory life while also offering care and
                     nurturing as children move through different developmental
-                    stages. They are available and on call whenever the children
-                    are in the dormitories and work closely with other members
-                    of staff to ensure that each child’s needs are met. This
-                    includes close collaboration with the San Sister and the
-                    school Counsellor. Transition times are built into the move
-                    from Bob Williams to Gibbs, allowing girls the opportunity
-                    to spend time with the senior matron and become familiar
-                    with the slightly different routines and expectations.
+                    stages. They are available whenever the children are in the
+                    dormitories and work closely with other members of staff to
+                    ensure that each child’s needs are met. This includes close
+                    collaboration with the San Sister and the School Counsellor.
+                    Transition times are built into the move from Bob Williams
+                    dorm to Gibbs dorm, allowing girls the opportunity to spend
+                    time with the senior matron and become familiar with the
+                    slightly different routines and expectations.
                   </p>
                 </div>
               </div>
@@ -310,7 +308,7 @@ export default function BoardingLifePage() {
               <div className="mt-8 overflow-hidden rounded-[2rem] shadow-md">
                 <img
                   src="/images/kitchen-dining.webp"
-                  alt="The Ruzawi Kitchen and Dining"
+                  alt="The Ruzawi Kitchen and Dining Rooms"
                   className="h-[320px] w-full object-cover md:h-[420px]"
                 />
               </div>
@@ -325,9 +323,9 @@ export default function BoardingLifePage() {
                     <p>
                       At Ruzawi, mealtimes are an important part of daily life
                       and play a key role in supporting the health, wellbeing
-                      and development of our children. The kitchen and dining
-                      team work to three core principles: balanced nutrition,
-                      quality ingredients and enjoyable meals.
+                      and development of our children. The kitchen works to
+                      three core principles: balanced nutrition, quality
+                      ingredients and enjoyable meals.
                     </p>
 
                     <p>
@@ -349,7 +347,7 @@ export default function BoardingLifePage() {
                     </p>
 
                     <p>
-                      Behind the scenes, a dedicated team of chefs and waitstaff
+                      Behind the scenes, a dedicated team of chefs and waiters
                       work together to deliver every meal. Under the leadership
                       of Dylan Taylor, whose culinary experience spans both
                       Zimbabwe and the United Kingdom, the kitchen maintains
@@ -437,8 +435,8 @@ export default function BoardingLifePage() {
                   </p>
 
                   <p>
-                    The team includes the school counsellor, Chapel spiritual
-                    leaders, the school nurse and the Head of Curriculum
+                    The team includes the School Sounsellor, The Chapel
+                    spiritual leaders, the San Sister and the Head of Curriculum
                     Support, ensuring that all aspects of our children’s
                     wellbeing are safeguarded.
                   </p>
@@ -519,21 +517,16 @@ export default function BoardingLifePage() {
                 </p>
 
                 <p>
-                  We felt this programme would be beneficial on several fronts.
-                  From a leadership perspective, it allows every Grade Seven
-                  pupil to take responsibility for a family unit, direct its
-                  members in a variety of activities and plan how tasks are
-                  shared, while listening to and valuing the input of younger
-                  children.
-                </p>
-
-                <p>
-                  From a social perspective, the meetings encourage children
-                  across the grades to interact and form friendships with age
-                  groups they may not normally encounter. It also allows all
-                  children to contribute their thoughts and ideas on a wide
-                  range of topics, teaching them to value others and respect
-                  different opinions.
+                  This programme is beneficial on several fronts. From a
+                  leadership perspective, it allows every Grade Seven pupil to
+                  take responsibility for a family unit, direct its members in a
+                  variety of activities and plan how tasks are shared, while
+                  listening to and valuing the input of younger children. From a
+                  social perspective, the meetings encourage children across the
+                  grades to interact and form friendships with age groups they
+                  may not normally encounter. It also allows all children to
+                  contribute their thoughts and ideas on a wide range of topics,
+                  teaching them to value others and respect different opinions.
                 </p>
 
                 <p>

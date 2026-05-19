@@ -22,15 +22,20 @@ export default function HomePage() {
         <section className="relative min-h-screen overflow-hidden bg-black">
           <video
             className="absolute inset-0 h-full w-full object-cover"
-            src="/videos/ruzawi-hero.mp4"
             autoPlay
             muted
             loop
             playsInline
-          />
-
+            preload="metadata"
+            poster="/images/hero-video-poster.webp"
+            onCanPlay={(event) => {
+              event.currentTarget.classList.add("opacity-100");
+            }}
+          >
+            <source src="/videos/ruzawi-hero.webm" type="video/webm" />
+            <source src="/videos/ruzawi-hero.mp4" type="video/mp4" />
+          </video>{" "}
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/75" />
-
           <div className="relative z-10 flex min-h-screen max-w-4xl flex-col items-start justify-center px-6 pt-28 lg:ml-12 lg:px-8 xl:ml-20">
             <motion.p
               initial={{ opacity: 0, y: 16 }}
@@ -128,10 +133,11 @@ export default function HomePage() {
                 Canon Robert Grinham and Mr Maurice Carver, as a preparatory
                 boarding school for boys. The school became fully co-educational
                 in January 2003. Today, Ruzawi caters for children aged 6 to 12
-                years. In the Infants’ Department, more commonly referred to as
-                Kippers, there are two Grade One and two Grade Two classes. From
-                Grade Three through to Grade Seven, there are two classes per
-                grade with a maximum of 20 children in each class.
+                years. In the Infants’ Department, more commonly known as the
+                Kippers, the name reflects the idea of little fish growing in
+                faith and community. There are two Grade One and two Grade Two
+                classes. From Grade Three through to Grade Seven there are two
+                classes per grade, with a maximum of 20 children in each class.
               </p>
 
               <p>
@@ -140,7 +146,7 @@ export default function HomePage() {
                 hectares of indigenous woodland and eucalyptus plantations. The
                 David Smith Dam, located on the northern boundary of the
                 property, contributes to the school’s ideal rural setting,
-                offering both space and opportunity for learning beyond the
+                offering both space and the opportunity for learning beyond the
                 classroom.
               </p>
 
@@ -170,6 +176,108 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        <section className="mx-auto max-w-7xl px-6 pb-16 lg:px-8">
+          <div className="rounded-[2rem] bg-[#00582C] p-8 text-white shadow-xl md:p-12">
+            <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#B6D7E7]">
+              A motto rooted in discipleship and service
+            </p>
+
+            <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight md:text-5xl">
+              Learning Knights
+            </h2>
+
+            <blockquote className="mt-8 space-y-5 border-l-4 border-[#B6D7E7] pl-6 text-lg leading-8 text-white/85 md:text-xl md:leading-9">
+              <p>
+                The motto is of special interest, suggested to us in 1921 by
+                Canon Arthur Davies, Principal of St. John’s College, Agra, and
+                later Dean of Worcester.
+              </p>
+
+              <p>
+                In an old Northumbrian Gospel, circa A.D. 1150, the word
+                disciple does not appear. When mention is made of the followers
+                of our Lord, the words used are “Learning Knights”.
+              </p>
+
+              <p>
+                It would be difficult to find two words that better define the
+                aim of the Christian life for Prep. School boys. Girls since
+                2003.
+              </p>
+            </blockquote>
+
+            <p className="mt-7 text-sm font-bold uppercase tracking-[0.2em] text-[#B6D7E7]">
+              Ruzawi: The Founding of a School
+            </p>
+          </div>
+        </section>
+        <section className="mx-auto max-w-7xl px-6 pb-20 lg:px-8">
+          <div className="rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-12">
+            <p className="text-sm font-bold uppercase tracking-[0.24em] text-[#47778D]">
+              Ethos
+            </p>
+
+            <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#00582C] md:text-5xl">
+              The Ruzawi Ethos
+            </h2>
+
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              <div className="rounded-[1.5rem] bg-[#f6f1e7] p-6">
+                <h3 className="font-serif text-2xl font-semibold text-[#00582C]">
+                  Ruzawi Purpose
+                </h3>
+
+                <p className="mt-3 text-base leading-8 text-[#35443a]">
+                  To fulfil the founding principles established in 1928 by
+                  Messrs Carver and Grinham, by providing a balanced education
+                  in accordance with the Christian faith in the Anglican
+                  tradition in service of God, the School and the community.
+                </p>
+              </div>
+
+              <div className="rounded-[1.5rem] bg-[#f6f1e7] p-6">
+                <h3 className="font-serif text-2xl font-semibold text-[#00582C]">
+                  Ruzawi Commitment
+                </h3>
+
+                <p className="mt-3 text-base leading-8 text-[#35443a]">
+                  To provide an education that nurtures the spiritual,
+                  emotional, social and physical development of each individual,
+                  recognising and enhancing each child’s uniqueness, their sense
+                  of self-worth and self-confidence, equipping them for life
+                  beyond Ruzawi.
+                </p>
+              </div>
+
+              <div className="rounded-[1.5rem] bg-[#f6f1e7] p-6">
+                <h3 className="font-serif text-2xl font-semibold text-[#00582C]">
+                  Values
+                </h3>
+
+                <p className="mt-3 text-base leading-8 text-[#35443a]">
+                  We are committed to a sound Christian ethos, and creating a
+                  Ruzawi Family that values integrity, honesty, love, humility
+                  and courage. Our values encompass the acceptance of the
+                  uniqueness of others, the desire to learn and discover,
+                  dedication to hard work, and respect for the community at
+                  large.
+                </p>
+              </div>
+
+              <div className="rounded-[1.5rem] bg-[#f6f1e7] p-6">
+                <h3 className="font-serif text-2xl font-semibold text-[#00582C]">
+                  Vision
+                </h3>
+
+                <p className="mt-3 text-base leading-8 text-[#35443a]">
+                  To be the co-educational preparatory school of choice in
+                  Zimbabwe and in the region, through our overall commitment to
+                  the Ruzawi Ethos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>{" "}
         <section className="mx-auto max-w-7xl px-6 pb-20 lg:px-8">
           <div className="mb-9 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <SectionIntro
@@ -201,8 +309,9 @@ export default function HomePage() {
                 </h2>
 
                 <p className="mt-5 text-lg leading-8 text-white/75">
-                  A message of welcome, belonging and purpose from the heart of
-                  Ruzawi School.
+                  A welcome message from the Headmaster, sharing the school’s
+                  values-driven approach to faith, learning, character and
+                  community.
                 </p>
               </a>
 
@@ -215,7 +324,7 @@ export default function HomePage() {
                 </p>
 
                 <h2 className="mt-4 font-serif text-4xl font-semibold">
-                  Why Ruzawi
+                  Why Ruzawi?
                 </h2>
 
                 <p className="mt-5 text-lg leading-8 text-[#00582C]/75">
@@ -238,7 +347,7 @@ export default function HomePage() {
 
             <VideoCard
               title="Ruzawi Anthem"
-              description="The School Singing our Anthem"
+              description="The School singing our Anthem"
               src="/videos/ruzawi-anthem-open-day.mp4"
               type="video"
             />

@@ -14,6 +14,8 @@ import RopaPage from "./pages/RopaPage";
 import MagazinesPage from "./pages/MagazinesPage";
 import OnlineApplicationPage from "./pages/OnlineApplicationPage";
 import ContactPage from "./pages/ContactPage";
+import StaffPage from "./pages/StaffPage";
+import JuniorMastersApplicationPage from "./pages/JuniorMastersApplicationPage";
 
 export default function App() {
   return (
@@ -28,6 +30,7 @@ export default function App() {
         <Route path="/why-ruzawi" element={<WhyRuzawiPage />} />
         <Route path="/tradition-at-ruzawi" element={<TraditionRuzawiPage />} />
         <Route path="/governance" element={<GovernancePage />} />
+        <Route path="/staff" element={<StaffPage />} />
         <Route
           path="/junior-masters-and-mistresses"
           element={<JuniorMastersMistressesPage />}
@@ -77,6 +80,10 @@ export default function App() {
         <Route path="/sports-and-clubs" element={<SportsClubsPage />} />
         <Route path="/sport-at-ruzawi" element={<SportsClubsPage />} />
         <Route path="/clubs" element={<SportsClubsPage />} />
+        <Route
+          path="/junior-masters-and-mistresses/apply"
+          element={<JuniorMastersApplicationPage />}
+        />
       </Routes>
     </BrowserRouter>
   );
