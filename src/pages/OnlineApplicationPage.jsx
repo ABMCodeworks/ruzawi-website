@@ -614,8 +614,6 @@ export default function OnlineApplicationPage() {
                     NB: A confirmation email will be sent to both
                     Parent/Guardian email addresses entered below.
                   </p>
-
-                  <ApplicationProcessNotice />
                 </div>
 
                 <TextArea
