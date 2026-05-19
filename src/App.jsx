@@ -85,8 +85,8 @@ export default function App() {
           path="/junior-masters-and-mistresses/apply"
           element={<JuniorMastersApplicationPage />}
         />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <Route path="*" element={<NotFoundPage />} />
     </BrowserRouter>
   );
 }
