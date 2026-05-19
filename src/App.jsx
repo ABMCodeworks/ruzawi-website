@@ -16,6 +16,7 @@ import OnlineApplicationPage from "./pages/OnlineApplicationPage";
 import ContactPage from "./pages/ContactPage";
 import StaffPage from "./pages/StaffPage";
 import JuniorMastersApplicationPage from "./pages/JuniorMastersApplicationPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   return (
