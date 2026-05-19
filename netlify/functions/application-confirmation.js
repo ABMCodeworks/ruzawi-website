@@ -5,8 +5,21 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
-const APPLICATION_PARENT_MESSAGE =
-  "After submitting this form, Grade 1 and Grade 3 applicants, being the intake years, will be contacted by the school prior to their assessment. Applications for other grades will be automatically entered into our database and placed on our waitlist. You will be contacted if an assessment opportunity arises.";
+const APPLICATION_PARENT_MESSAGE = `
+Good day
+
+Thank you very much, your application submission has been successful.
+
+Assessments are the next stage in the process and will only happen if:
+1) The application process is complete.
+2) There are spaces available both in the classroom and dormitory for the specified year group.
+
+NB: If there are no spaces available, your application will go on a waiting list. As this procedure is automated, a follow-up phone call is not necessary. You will be contacted if an assessment is required at any stage.
+
+If this application is for our natural intake years of Grade 1 and Grade 3, you will be invited to an Open Day, possibly followed by an assessment.
+
+Assessments for Grade 1 and Grade 3 happen in the year prior to the year that you have applied for.
+`.trim();
 
 function jsonResponse(statusCode, body) {
   return {
@@ -109,7 +122,7 @@ function parseMultipartForm(event) {
   });
 }
 
-async function verifyRecaptcha(token, expectedAction) {
+async function verifyRecaptcha(token, expectedAction = "") {
   if (!process.env.RECAPTCHA_SECRET_KEY) {
     throw new Error("Missing RECAPTCHA_SECRET_KEY.");
   }
@@ -142,7 +155,7 @@ async function verifyRecaptcha(token, expectedAction) {
     };
   }
 
-  if (result.action && result.action !== expectedAction) {
+  if (expectedAction && result.action && result.action !== expectedAction) {
     return {
       ok: false,
       reason: "Invalid reCAPTCHA action.",
@@ -161,16 +174,6 @@ async function verifyRecaptcha(token, expectedAction) {
   };
 }
 
-function getApplicationMessageByGrade(grade) {
-  const normalisedGrade = clean(grade).toLowerCase();
-
-  if (normalisedGrade === "grade 1" || normalisedGrade === "grade 3") {
-    return "Grade 1 and Grade 3 are Ruzawi’s intake years. The school will contact you prior to your child’s assessment.";
-  }
-
-  return "Your child’s application has been automatically entered into our database and placed on our waitlist. You will be contacted if an assessment opportunity arises.";
-}
-
 function buildConfirmationEmail(fields) {
   const studentName = [
     clean(fields.student_name),
@@ -185,29 +188,29 @@ function buildConfirmationEmail(fields) {
   const startYear = clean(fields.start_year);
   const requiredEntry = [startMonth, startYear].filter(Boolean).join(" ");
 
-  const message =
-    clean(fields.parentConfirmationMessage) ||
-    getApplicationMessageByGrade(grade) ||
-    APPLICATION_PARENT_MESSAGE;
-
   const safeStudentName = escapeHtml(studentName || "your child");
   const safeGrade = escapeHtml(grade);
   const safeRequiredEntry = escapeHtml(requiredEntry || "Not provided");
-  const safeMessage = escapeHtml(message);
 
   const text = `
-Dear Parent/Guardian,
+Good day
 
-Thank you for submitting an online application to Ruzawi School.
+Thank you very much, your application submission has been successful.
 
 Application details:
 Child: ${studentName || "Not provided"}
 Grade applying for: ${grade}
 Required entry: ${requiredEntry || "Not provided"}
 
-${message}
+Assessments are the next stage in the process and will only happen if:
+1) The application process is complete.
+2) There are spaces available both in the classroom and dormitory for the specified year group.
 
-Please contact registrar@ruzawi.com if you have any queries.
+NB: If there are no spaces available, your application will go on a waiting list. As this procedure is automated, a follow-up phone call is not necessary. You will be contacted if an assessment is required at any stage.
+
+If this application is for our natural intake years of Grade 1 and Grade 3, you will be invited to an Open Day, possibly followed by an assessment.
+
+Assessments for Grade 1 and Grade 3 happen in the year prior to the year that you have applied for.
 
 Kind regards,
 Ruzawi School
@@ -215,12 +218,12 @@ Ruzawi School
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #10251c;">
-      <h2 style="color: #00582C;">Ruzawi School Application Received</h2>
+      <h2 style="color: #00582C;">Ruzawi School Application Submission Successful</h2>
 
-      <p>Dear Parent/Guardian,</p>
+      <p>Good day</p>
 
       <p>
-        Thank you for submitting an online application to Ruzawi School.
+        Thank you very much, your application submission has been successful.
       </p>
 
       <div style="background: #f6f1e7; padding: 18px; border-radius: 14px; margin: 22px 0;">
@@ -229,14 +232,28 @@ Ruzawi School
         <p style="margin: 0;"><strong>Required entry:</strong> ${safeRequiredEntry}</p>
       </div>
 
-      <p>${safeMessage}</p>
+      <p>
+        Assessments are the next stage in the process and will only happen if:
+      </p>
+
+      <ol>
+        <li>The application process is complete.</li>
+        <li>There are spaces available both in the classroom and dormitory for the specified year group.</li>
+      </ol>
 
       <p>
-        Please contact
-        <a href="mailto:registrar@ruzawi.com" style="color: #00582C; font-weight: bold;">
-          registrar@ruzawi.com
-        </a>
-        if you have any queries.
+        <strong>NB:</strong> If there are no spaces available, your application will go on a waiting list.
+        As this procedure is automated, a follow-up phone call is not necessary.
+        You will be contacted if an assessment is required at any stage.
+      </p>
+
+      <p>
+        If this application is for our natural intake years of <strong>Grade 1 and Grade 3</strong>,
+        you will be invited to an Open Day, possibly followed by an assessment.
+      </p>
+
+      <p>
+        Assessments for Grade 1 and Grade 3 happen in the year prior to the year that you have applied for.
       </p>
 
       <p>Kind regards,<br />Ruzawi School</p>
@@ -260,24 +277,22 @@ function buildAdminEmail(fields) {
     .filter(Boolean)
     .join(" ");
 
+  const requiredEntry = [fields.start_month, fields.start_year]
+    .filter(Boolean)
+    .join(" ");
+
   const safeStudentName = escapeHtml(studentName || "Not provided");
   const safeGrade = escapeHtml(fields.grade || "Not provided");
   const safeGuardian1 = escapeHtml(fields.guardian1_email || "Not provided");
   const safeGuardian2 = escapeHtml(fields.guardian2_email || "Not provided");
-  const safeStart = escapeHtml(
-    [fields.start_month, fields.start_year].filter(Boolean).join(" ") ||
-      "Not provided",
-  );
+  const safeStart = escapeHtml(requiredEntry || "Not provided");
 
   const text = `
 New online application confirmation submitted
 
 Child: ${studentName || "Not provided"}
 Grade: ${fields.grade || "Not provided"}
-Required entry: ${
-    [fields.start_month, fields.start_year].filter(Boolean).join(" ") ||
-    "Not provided"
-  }
+Required entry: ${requiredEntry || "Not provided"}
 
 Guardian 1 Email: ${fields.guardian1_email || "Not provided"}
 Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
@@ -352,6 +367,13 @@ export async function handler(event) {
       "start_year",
       "guardian1_email",
       "guardian1_name",
+      "guardian1_title",
+      "guardian2_email",
+      "guardian2_name",
+      "guardian2_title",
+      "legal_custodian",
+      "signature_date",
+      "capacity_of_signatory",
     ];
 
     const missingField = requiredFields.find((fieldName) => {
@@ -364,10 +386,7 @@ export async function handler(event) {
       });
     }
 
-    const recaptcha = await verifyRecaptcha(
-      recaptchaToken,
-      "online_application",
-    );
+    const recaptcha = await verifyRecaptcha(recaptchaToken);
 
     if (!recaptcha.ok) {
       return jsonResponse(400, {
@@ -383,7 +402,7 @@ export async function handler(event) {
         "Ruzawi Website <website@your-verified-domain.com>",
       to: guardianEmails,
       replyTo: "registrar@ruzawi.com",
-      subject: `Ruzawi School Application Received - ${
+      subject: `Ruzawi School Application Submission Successful - ${
         confirmationEmail.studentName || confirmationEmail.grade
       }`,
       text: confirmationEmail.text,
