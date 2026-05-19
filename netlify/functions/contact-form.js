@@ -8,8 +8,8 @@ const RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 const ENQUIRY_DESTINATIONS = {
   general: "administrator@ruzawi.com",
   other: "administrator@ruzawi.com",
-  admissions: "administrator@ruzawi.com",
-  "job-application": "administrator@ruzawi.com",
+  admissions: "marketing@ruzawi.com",
+  "job-application": "jobs@ruzawi.com",
 };
 
 const ENQUIRY_LABELS = {
