@@ -4,8 +4,11 @@ import TopBar from "../components/TopBar";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
 
-const APPLICATION_ENDPOINT = "https://web09823.ruzawi.com/api/applications";
+const APPLICATION_ENDPOINT = "/.netlify/functions/application-confirmation";
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
+const APPLICATION_PARENT_MESSAGE =
+  "After submitting this form, Grade 1 and Grade 3 applicants, being the intake years, will be contacted by the school prior to their assessment. Applications for other grades will be automatically entered into our database and placed on our waitlist. You will be contacted if an assessment opportunity arises.";
 
 const declarationCheckboxNames = [
   "certify_complete",
@@ -143,6 +146,18 @@ function SectionTitle({ children }) {
   );
 }
 
+function ApplicationProcessNotice() {
+  return (
+    <div className="rounded-[2rem] bg-[#B6D7E7]/45 p-6 text-[#00582C] ring-1 ring-[#47778D]/20">
+      <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#47778D]">
+        What happens after you submit
+      </p>
+
+      <p className="mt-3 text-lg leading-8">{APPLICATION_PARENT_MESSAGE}</p>
+    </div>
+  );
+}
+
 export default function OnlineApplicationPage() {
   const recaptchaRef = useRef(null);
 
@@ -193,6 +208,7 @@ export default function OnlineApplicationPage() {
         formData.set(name, "1");
       });
 
+      formData.append("parentConfirmationMessage", APPLICATION_PARENT_MESSAGE);
       formData.append("recaptchaToken", recaptchaToken);
 
       const response = await fetch(APPLICATION_ENDPOINT, {
@@ -213,7 +229,8 @@ export default function OnlineApplicationPage() {
 
       setStatus({
         type: "success",
-        message: "Thank you. Your application has been submitted successfully.",
+        message:
+          "Thank you. Your application has been submitted successfully. A confirmation email has been sent to the parent/guardian email addresses provided.",
       });
 
       window.scrollTo({
@@ -285,10 +302,11 @@ export default function OnlineApplicationPage() {
         {status.message && (
           <section className="mx-auto max-w-[1200px] px-6 pt-10 lg:px-8">
             <div
-              className={`rounded-[2rem] p-6 text-lg font-semibold shadow-sm ring-1 ring-black/5 ${status.type === "success"
+              className={`rounded-[2rem] p-6 text-lg font-semibold shadow-sm ring-1 ring-black/5 ${
+                status.type === "success"
                   ? "bg-[#00582C] text-white"
                   : "bg-red-50 text-red-800"
-                }`}
+              }`}
             >
               {status.message}
             </div>
@@ -355,6 +373,10 @@ export default function OnlineApplicationPage() {
                   </ul>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-10">
+              <ApplicationProcessNotice />
             </div>
 
             <div className="mt-10 overflow-x-auto rounded-2xl border border-black/10">
@@ -575,10 +597,12 @@ export default function OnlineApplicationPage() {
               <section className="space-y-6">
                 <SectionTitle>Parent/Guardian and Family Details</SectionTitle>
 
-                <p className="rounded-2xl bg-[#B6D7E7]/50 p-5 leading-7 text-[#00582C]">
-                  NB: This form will be automatically sent to both
-                  Parent/Guardian emails entered below.
-                </p>
+                <div className="space-y-4">
+                  <p className="rounded-2xl bg-[#B6D7E7]/50 p-5 leading-7 text-[#00582C]">
+                    NB: A confirmation email will be sent to both
+                    Parent/Guardian email addresses entered below.
+                  </p>
+                </div>
 
                 <TextArea
                   label="Siblings"
