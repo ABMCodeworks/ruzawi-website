@@ -525,42 +525,244 @@ export default function SchoolLifePage() {
 
               <div className="mt-8 space-y-6 text-lg leading-9 text-[#35443a]">
                 <p>
-                  The Learning Knights Award is a culminating programme designed
-                  for our Grade Seven pupils and reflects the values and ethos
-                  at the heart of Ruzawi. The award encourages pupils to develop
-                  leadership, responsibility, service and personal organisation
-                  as they prepare to move on to senior school.
+                  The Learning Knights Award is a special Grade 7 programme at
+                  Ruzawi School designed to recognise pupils who demonstrate
+                  courage, commitment, resilience, responsibility and service
+                  beyond the usual expectations of school life. It celebrates
+                  children who willingly challenge themselves physically,
+                  mentally and socially while growing into capable and
+                  compassionate young people.
                 </p>
 
                 <p>
-                  Through the Learning Knights Award, children are challenged to
-                  step beyond their comfort zones and take ownership of their
-                  growth. Pupils work towards a range of requirements that
-                  promote independence, commitment and perseverance.
+                  The award is presented to pupils who act as true ambassadors
+                  for Ruzawi. These are children who serve others, develop new
+                  skills, organise meaningful projects and persevere through
+                  demanding personal challenges.
                 </p>
 
                 <p>
-                  These include setting personal goals, contributing
-                  meaningfully to the school community and demonstrating
-                  consistent effort across academic, sporting and cultural
-                  areas.
+                  The programme encourages pupils to move outside of their
+                  comfort zones and discover strengths, passions and abilities
+                  that they may not otherwise have explored.
+                </p>
+
+                <h3 className="pt-4 font-serif text-3xl font-semibold text-[#00582C]">
+                  Core Areas of the Award
+                </h3>
+
+                <p>
+                  To complete the Learning Knights Award, pupils must take part
+                  in four main sections.
+                </p>
+
+                <div className="rounded-[2rem] bg-[#f6f1e7] p-7 ring-1 ring-black/5">
+                  <h4 className="font-serif text-2xl font-semibold text-[#00582C]">
+                    1. Community Service
+                  </h4>
+
+                  <div className="mt-5 space-y-5">
+                    <p>
+                      Pupils are required to complete a minimum of 25 hours of
+                      service.
+                    </p>
+
+                    <p>
+                      At least 5 hours must take place in each service sector
+                      and should go beyond the normal community service carried
+                      out at school.
+                    </p>
+
+                    <p>
+                      The aim of this section is to develop empathy, generosity,
+                      awareness and a spirit of giving.
+                    </p>
+
+                    <p>Examples of community service include:</p>
+
+                    <ul className="list-disc space-y-2 pl-6">
+                      <li>Recycling initiatives and environmental projects</li>
+                      <li>
+                        Visiting and assisting at hospitals, old age homes and
+                        orphanages
+                      </li>
+                      <li>Gardening, tree planting and litter collection</li>
+                      <li>Supporting charities and fundraising initiatives</li>
+                      <li>
+                        Serving the wider Ruzawi and Marondera communities
+                      </li>
+                    </ul>
+
+                    <p>
+                      The award encourages pupils to understand that service is
+                      not simply about completing hours, but about learning to
+                      care for others and contribute positively to the wider
+                      community.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-[2rem] bg-[#f6f1e7] p-7 ring-1 ring-black/5">
+                  <h4 className="font-serif text-2xl font-semibold text-[#00582C]">
+                    2. Skills Development
+                  </h4>
+
+                  <div className="mt-5 space-y-5">
+                    <p>
+                      Pupils must learn and develop a new skill that is
+                      different from the activities in which they would normally
+                      excel.
+                    </p>
+
+                    <p>
+                      The skill may be self-taught, developed through
+                      instruction or learnt through practical experience.
+                    </p>
+
+                    <p>
+                      The focus is on growth, perseverance and broadening
+                      horizons.
+                    </p>
+
+                    <p>Examples of skills include:</p>
+
+                    <ul className="list-disc space-y-2 pl-6">
+                      <li>Cooking, baking and food preparation</li>
+                      <li>Sewing, knitting and crochet</li>
+                      <li>Photography and musical instruments</li>
+                      <li>First aid, sign language and calligraphy</li>
+                      <li>Scuba diving, car mechanics and tree propagation</li>
+                    </ul>
+
+                    <p>
+                      The programme encourages pupils to discover new interests
+                      while learning patience, discipline and confidence.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-[2rem] bg-[#f6f1e7] p-7 ring-1 ring-black/5">
+                  <h4 className="font-serif text-2xl font-semibold text-[#00582C]">
+                    3. Personal Challenge
+                  </h4>
+
+                  <div className="mt-5 space-y-5">
+                    <p>
+                      The challenge section requires pupils to complete a
+                      demanding physical or personal objective that stretches
+                      them beyond what they would normally achieve.
+                    </p>
+
+                    <p>
+                      The challenge should be individual to the child and suited
+                      to their abilities while still requiring determination and
+                      resilience.
+                    </p>
+
+                    <p>Examples of challenges include:</p>
+
+                    <ul className="list-disc space-y-2 pl-6">
+                      <li>The Imire Bike Ride and Turaco Trail adventures</li>
+                      <li>Long distance runs and walks</li>
+                      <li>Cycling and endurance riding events</li>
+                      <li>Triathlons and mountain climbs</li>
+                      <li>Significant improvement in a chosen sport</li>
+                    </ul>
+
+                    <p>
+                      This section develops grit, endurance, perseverance and
+                      mental toughness while helping pupils experience the
+                      satisfaction of overcoming difficulty.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="rounded-[2rem] bg-[#f6f1e7] p-7 ring-1 ring-black/5">
+                  <h4 className="font-serif text-2xl font-semibold text-[#00582C]">
+                    4. Organisational Skills and Leadership
+                  </h4>
+
+                  <div className="mt-5 space-y-5">
+                    <p>
+                      Pupils are encouraged to organise, lead and take
+                      responsibility for projects or events.
+                    </p>
+
+                    <p>
+                      This section focuses on planning, communication,
+                      initiative and execution.
+                    </p>
+
+                    <p>Examples include:</p>
+
+                    <ul className="list-disc space-y-2 pl-6">
+                      <li>Organising Grandparents’ Day activities</li>
+                      <li>Planning Sports Day stalls or events</li>
+                      <li>Running quizzes, bingo evenings or fundraisers</li>
+                      <li>Coordinating charity initiatives and drives</li>
+                      <li>Assisting with community or school functions</li>
+                    </ul>
+
+                    <p>
+                      All planning and organisation should be led by the child
+                      wherever possible.
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="pt-4 font-serif text-3xl font-semibold text-[#00582C]">
+                  Portfolio Submission
+                </h3>
+
+                <p>
+                  At the completion of the programme, pupils submit a portfolio
+                  to the Headmaster for consideration.
+                </p>
+
+                <p>The portfolio should include:</p>
+
+                <ul className="list-disc space-y-2 pl-6">
+                  <li>Evidence of participation</li>
+                  <li>Photographs and reflections</li>
+                  <li>Records of hours completed</li>
+                  <li>Details of skills learnt and challenges undertaken</li>
+                  <li>Evidence of organisational and leadership involvement</li>
+                </ul>
+
+                <p>
+                  The portfolio should clearly demonstrate commitment, maturity
+                  and effort across all four sections of the award.
+                </p>
+
+                <h3 className="pt-4 font-serif text-3xl font-semibold text-[#00582C]">
+                  The Purpose of the Award
+                </h3>
+
+                <p>
+                  The Learning Knights Award is far more than a badge of
+                  achievement.
+                </p>
+
+                <p>It is designed to help children:</p>
+
+                <ul className="list-disc space-y-2 pl-6">
+                  <li>Develop resilience and confidence</li>
+                  <li>Learn responsibility and leadership</li>
+                  <li>Discover compassion and service</li>
+                  <li>Broaden their experiences and interests</li>
+                  <li>Grow in maturity and perseverance</li>
+                </ul>
+
+                <p>
+                  The programme recognises that true education extends beyond
+                  the classroom and that meaningful growth often happens when
+                  children are challenged, stretched and encouraged to serve
+                  others.
                 </p>
 
                 <p>
-                  The award places strong emphasis on service and character
-                  development. Pupils are encouraged to reflect on their actions
-                  and decisions and to recognise the impact they have on others.
-                  This process helps them develop a deeper understanding of
-                  accountability, empathy and integrity.
-                </p>
-
-                <p>
-                  The Learning Knights Award is not about competition but about
-                  personal progress. Each child’s journey is unique and success
-                  is measured by growth, effort and attitude. The programme
-                  provides a fitting conclusion to a pupil’s time at Ruzawi,
-                  equipping them with confidence, values and life skills that
-                  will serve them well beyond their primary school years.
+                  The award aims to produce young people who are capable,
+                  thoughtful, adventurous and grounded in strong values.
                 </p>
               </div>
 
