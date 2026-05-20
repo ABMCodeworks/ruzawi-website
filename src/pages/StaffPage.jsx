@@ -110,7 +110,7 @@ const staffMembers = [
   },
   {
     name: "Mrs M Mutuke",
-    title: "Junior Indigo & Stnley Dorm",
+    title: "Junior Indigo & Stanley Dorm",
     image: "/images/staff/mufaro-mutuke.webp",
   },
   {

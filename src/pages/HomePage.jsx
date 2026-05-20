@@ -52,7 +52,7 @@ export default function HomePage() {
               transition={{ duration: 0.75, delay: 0.1 }}
               className="max-w-3xl font-serif text-4xl font-semibold leading-[1.08] text-white md:text-5xl lg:text-6xl"
             >
-              Every Boy and Every Girl will find a place within our world
+              Where Every Boy and Every Girl will find a place within our world
             </motion.h1>
 
             <motion.div
