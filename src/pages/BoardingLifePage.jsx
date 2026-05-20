@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import TopBar from "../components/TopBar";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
+
 const boardingTabs = [
   {
     id: "dorm-life",
@@ -53,7 +54,7 @@ export default function BoardingLifePage() {
 
   useEffect(() => {
     function updateActiveTab() {
-      const offset = window.innerWidth < 1024 ? 220 : 150;
+      const offset = window.innerWidth < 1024 ? 140 : 150;
       let currentId = boardingTabs[0].id;
 
       for (const tab of boardingTabs) {
@@ -88,7 +89,7 @@ export default function BoardingLifePage() {
     const element = document.getElementById(id);
 
     if (element) {
-      const yOffset = window.innerWidth < 1024 ? -210 : -120;
+      const yOffset = window.innerWidth < 1024 ? -130 : -120;
       const y =
         element.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
@@ -107,6 +108,7 @@ export default function BoardingLifePage() {
         path="/boarding-life"
         image="/images/boarding-life.webp"
       />
+
       <TopBar />
 
       <main>
@@ -147,9 +149,33 @@ export default function BoardingLifePage() {
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-[1500px] gap-10 px-6 py-10 lg:grid-cols-[300px_1fr] lg:px-8 lg:py-16 2xl:px-10">
+        <section className="mx-auto grid max-w-[1500px] gap-6 px-6 py-8 lg:grid-cols-[300px_1fr] lg:gap-10 lg:px-8 lg:py-16 2xl:px-10">
           <aside className="sticky top-20 z-30 self-start lg:top-28">
-            <div className="max-h-[calc(100vh-6rem)] overflow-y-auto rounded-[1.5rem] bg-white shadow-xl ring-1 ring-black/5 lg:rounded-[2rem]">
+            <div className="lg:hidden">
+              <div className="rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/5">
+                <label
+                  htmlFor="boarding-section-select"
+                  className="mb-2 block text-[0.65rem] font-black uppercase tracking-[0.22em] text-[#47778D]"
+                >
+                  Boarding Life
+                </label>
+
+                <select
+                  id="boarding-section-select"
+                  value={activeTab}
+                  onChange={(event) => handleTabClick(event.target.value)}
+                  className="w-full rounded-xl border border-[#B6D7E7] bg-[#f6f1e7] px-4 py-3 text-sm font-bold text-[#00582C] outline-none focus:border-[#47778D] focus:ring-2 focus:ring-[#B6D7E7]"
+                >
+                  {boardingTabs.map((tab) => (
+                    <option key={tab.id} value={tab.id}>
+                      {tab.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="hidden max-h-[calc(100vh-6rem)] overflow-y-auto rounded-[1.5rem] bg-white shadow-xl ring-1 ring-black/5 lg:block lg:rounded-[2rem]">
               <div className="bg-[#00582C] px-5 py-4 lg:px-6 lg:py-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-white">
                   Boarding Life
@@ -164,16 +190,18 @@ export default function BoardingLifePage() {
                     <button
                       key={tab.id}
                       onClick={() => handleTabClick(tab.id)}
-                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${isActive
+                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${
+                        isActive
                           ? "bg-[#47778D] text-white shadow-md"
                           : "bg-[#f6f1e7] text-[#00582C] hover:bg-[#B6D7E7]"
-                        }`}
+                      }`}
                     >
                       <span>{tab.label}</span>
 
                       <span
-                        className={`ml-3 shrink-0 transition ${isActive ? "translate-x-1" : ""
-                          }`}
+                        className={`ml-3 shrink-0 transition ${
+                          isActive ? "translate-x-1" : ""
+                        }`}
                       >
                         →
                       </span>
@@ -187,7 +215,7 @@ export default function BoardingLifePage() {
           <div className="space-y-12">
             <section
               id="dorm-life"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+              className="scroll-mt-40 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
             >
               <div className="grid gap-0 lg:grid-cols-[1fr_1fr]">
                 <div className="p-8 md:p-10">
@@ -295,7 +323,7 @@ export default function BoardingLifePage() {
 
             <section
               id="kitchen-housekeeping-laundry"
-              className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
                 Kitchen, Housekeeping & Laundry
@@ -414,7 +442,7 @@ export default function BoardingLifePage() {
 
             <section
               id="pastoral-care"
-              className="scroll-mt-56 rounded-[2rem] bg-[#00582C] p-8 text-white shadow-xl md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-[#00582C] p-8 text-white shadow-xl md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#B6D7E7]">
                 Pastoral Care
@@ -435,7 +463,7 @@ export default function BoardingLifePage() {
                   </p>
 
                   <p>
-                    The team includes the School Sounsellor, The Chapel
+                    The team includes the School Counsellor, the Chapel
                     spiritual leaders, the San Sister and the Head of Curriculum
                     Support, ensuring that all aspects of our children’s
                     wellbeing are safeguarded.
@@ -472,7 +500,7 @@ export default function BoardingLifePage() {
 
             <section
               id="ruzawi-families"
-              className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
                 Ruzawi Families
@@ -543,7 +571,7 @@ export default function BoardingLifePage() {
 
             <section
               id="ruzawi-sanatorium"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+              className="scroll-mt-40 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
             >
               <div className="grid gap-0 lg:grid-cols-[1fr_1fr]">
                 <div className="p-8 md:p-10">

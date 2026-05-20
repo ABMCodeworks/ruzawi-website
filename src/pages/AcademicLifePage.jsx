@@ -103,7 +103,7 @@ export default function AcademicLifePage() {
 
   useEffect(() => {
     function updateActiveTab() {
-      const offset = window.innerWidth < 1024 ? 220 : 150;
+      const offset = window.innerWidth < 1024 ? 140 : 150;
 
       let currentId = academicTabs[0].id;
 
@@ -139,7 +139,7 @@ export default function AcademicLifePage() {
     const element = document.getElementById(id);
 
     if (element) {
-      const yOffset = window.innerWidth < 1024 ? -210 : -120;
+      const yOffset = window.innerWidth < 1024 ? -130 : -120;
       const y =
         element.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
@@ -158,6 +158,7 @@ export default function AcademicLifePage() {
         path="/academic-life"
         image="/images/academics.webp"
       />
+
       <TopBar />
 
       <main>
@@ -199,9 +200,33 @@ export default function AcademicLifePage() {
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-[1500px] gap-10 px-6 py-10 lg:grid-cols-[300px_1fr] lg:px-8 lg:py-16 2xl:px-10">
+        <section className="mx-auto grid max-w-[1500px] gap-6 px-6 py-8 lg:grid-cols-[300px_1fr] lg:gap-10 lg:px-8 lg:py-16 2xl:px-10">
           <aside className="sticky top-20 z-30 self-start lg:top-28">
-            <div className="max-h-[calc(100vh-6rem)] overflow-y-auto rounded-[1.5rem] bg-white shadow-xl ring-1 ring-black/5 lg:rounded-[2rem]">
+            <div className="lg:hidden">
+              <div className="rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/5">
+                <label
+                  htmlFor="academic-section-select"
+                  className="mb-2 block text-[0.65rem] font-black uppercase tracking-[0.22em] text-[#47778D]"
+                >
+                  Academic Life
+                </label>
+
+                <select
+                  id="academic-section-select"
+                  value={activeTab}
+                  onChange={(event) => handleTabClick(event.target.value)}
+                  className="w-full rounded-xl border border-[#B6D7E7] bg-[#f6f1e7] px-4 py-3 text-sm font-bold text-[#00582C] outline-none focus:border-[#47778D] focus:ring-2 focus:ring-[#B6D7E7]"
+                >
+                  {academicTabs.map((tab) => (
+                    <option key={tab.id} value={tab.id}>
+                      {tab.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="hidden max-h-[calc(100vh-6rem)] overflow-y-auto rounded-[1.5rem] bg-white shadow-xl ring-1 ring-black/5 lg:block lg:rounded-[2rem]">
               <div className="bg-[#00582C] px-5 py-4 lg:px-6 lg:py-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-white">
                   Academic Life
@@ -241,7 +266,7 @@ export default function AcademicLifePage() {
           <div className="space-y-12">
             <section
               id="academics-at-ruzawi"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+              className="scroll-mt-40 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
             >
               <div className="grid gap-0 lg:grid-cols-[1fr_1fr]">
                 <div className="p-8 md:p-10">
@@ -301,7 +326,7 @@ export default function AcademicLifePage() {
 
             <section
               id="curriculum-support"
-              className="scroll-mt-56 rounded-[2rem] bg-[#00582C] p-8 text-white shadow-xl md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-[#00582C] p-8 text-white shadow-xl md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#B6D7E7]">
                 Curriculum Support
@@ -359,7 +384,7 @@ export default function AcademicLifePage() {
 
             <section
               id="kipper-department"
-              className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
                 Kipper Department
@@ -440,7 +465,7 @@ export default function AcademicLifePage() {
 
             <section
               id="subject-teaching"
-              className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
                 Subject Teaching
@@ -483,9 +508,10 @@ export default function AcademicLifePage() {
                 ))}
               </div>
             </section>
+
             <section
               id="outdoor-education"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+              className="scroll-mt-40 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
             >
               <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
                 <div className="min-h-[620px]">
@@ -549,7 +575,7 @@ export default function AcademicLifePage() {
 
             <section
               id="ruzawi-library"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+              className="scroll-mt-40 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
             >
               <div className="grid gap-0 lg:grid-cols-[1fr_1fr]">
                 <div className="p-8 md:p-10">
@@ -603,6 +629,7 @@ export default function AcademicLifePage() {
             </section>
           </div>
         </section>
+
         <Footer />
       </main>
     </div>

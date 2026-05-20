@@ -110,7 +110,7 @@ const staffMembers = [
   },
   {
     name: "Mrs M Mutuke",
-    title: "Occupational Therapy",
+    title: "Junior Indigo & Stnley Dorm",
     image: "/images/staff/mufaro-mutuke.webp",
   },
   {
@@ -185,7 +185,7 @@ const staffMembers = [
   },
   {
     name: "Mr M Matema",
-    title: "",
+    title: "Sports' Department",
     image: "/images/staff/munyaradzi-matema.webp",
   },
   {

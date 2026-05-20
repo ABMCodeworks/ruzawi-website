@@ -21,7 +21,6 @@ const schoolLifeTabs = [
     id: "learning-knights-award",
     label: "Learning Knights Award",
   },
-
   {
     id: "ruzchats-life-skills-and-the-chat-room",
     label: "RuzChats, Life Skills and The Chat Room",
@@ -108,7 +107,7 @@ export default function SchoolLifePage() {
     setActiveTab(id);
 
     setTimeout(() => {
-      const yOffset = window.innerWidth < 1024 ? -210 : -120;
+      const yOffset = window.innerWidth < 1024 ? -130 : -120;
       const y =
         element.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
@@ -121,7 +120,7 @@ export default function SchoolLifePage() {
 
   useEffect(() => {
     function updateActiveTab() {
-      const offset = window.innerWidth < 1024 ? 220 : 150;
+      const offset = window.innerWidth < 1024 ? 140 : 150;
       let currentId = schoolLifeTabs[0].id;
 
       for (const tab of schoolLifeTabs) {
@@ -156,7 +155,7 @@ export default function SchoolLifePage() {
     const element = document.getElementById(id);
 
     if (element) {
-      const yOffset = window.innerWidth < 1024 ? -210 : -120;
+      const yOffset = window.innerWidth < 1024 ? -130 : -120;
       const y =
         element.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
@@ -175,6 +174,7 @@ export default function SchoolLifePage() {
         path="/school-life"
         image="/images/school-life.webp"
       />
+
       <TopBar />
 
       <main>
@@ -215,9 +215,33 @@ export default function SchoolLifePage() {
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-[1500px] gap-10 px-6 py-10 lg:grid-cols-[300px_1fr] lg:px-8 lg:py-16 2xl:px-10">
+        <section className="mx-auto grid max-w-[1500px] gap-6 px-6 py-8 lg:grid-cols-[300px_1fr] lg:gap-10 lg:px-8 lg:py-16 2xl:px-10">
           <aside className="sticky top-20 z-30 self-start lg:top-28">
-            <div className="max-h-[calc(100vh-6rem)] overflow-y-auto rounded-[1.5rem] bg-white shadow-xl ring-1 ring-black/5 lg:rounded-[2rem]">
+            <div className="lg:hidden">
+              <div className="rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/5">
+                <label
+                  htmlFor="school-life-section-select"
+                  className="mb-2 block text-[0.65rem] font-black uppercase tracking-[0.22em] text-[#47778D]"
+                >
+                  School Life
+                </label>
+
+                <select
+                  id="school-life-section-select"
+                  value={activeTab}
+                  onChange={(event) => handleTabClick(event.target.value)}
+                  className="w-full rounded-xl border border-[#B6D7E7] bg-[#f6f1e7] px-4 py-3 text-sm font-bold text-[#00582C] outline-none focus:border-[#47778D] focus:ring-2 focus:ring-[#B6D7E7]"
+                >
+                  {schoolLifeTabs.map((tab) => (
+                    <option key={tab.id} value={tab.id}>
+                      {tab.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="hidden max-h-[calc(100vh-6rem)] overflow-y-auto rounded-[1.5rem] bg-white shadow-xl ring-1 ring-black/5 lg:block lg:rounded-[2rem]">
               <div className="bg-[#00582C] px-5 py-4 lg:px-6 lg:py-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-white">
                   School Life
@@ -232,16 +256,18 @@ export default function SchoolLifePage() {
                     <button
                       key={tab.id}
                       onClick={() => handleTabClick(tab.id)}
-                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${isActive
+                      className={`flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-xs font-bold transition sm:text-sm lg:px-5 lg:py-4 ${
+                        isActive
                           ? "bg-[#47778D] text-white shadow-md"
                           : "bg-[#f6f1e7] text-[#00582C] hover:bg-[#B6D7E7]"
-                        }`}
+                      }`}
                     >
                       <span>{tab.label}</span>
 
                       <span
-                        className={`ml-3 shrink-0 transition ${isActive ? "translate-x-1" : ""
-                          }`}
+                        className={`ml-3 shrink-0 transition ${
+                          isActive ? "translate-x-1" : ""
+                        }`}
                       >
                         →
                       </span>
@@ -255,7 +281,7 @@ export default function SchoolLifePage() {
           <div className="space-y-12">
             <section
               id="chapel"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+              className="scroll-mt-40 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
             >
               <div className="grid gap-0 lg:grid-cols-[1fr_1fr]">
                 <div className="p-8 md:p-10">
@@ -319,7 +345,7 @@ export default function SchoolLifePage() {
 
             <section
               id="charities-we-support"
-              className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
                 Charities We Support
@@ -353,7 +379,6 @@ export default function SchoolLifePage() {
               </div>
 
               <div className="mt-10 grid gap-6">
-                {" "}
                 {charities.map((charity) => (
                   <article
                     key={charity.title}
@@ -382,7 +407,7 @@ export default function SchoolLifePage() {
 
             <section
               id="leadership-at-ruzawi"
-              className="scroll-mt-56 rounded-[2rem] bg-[#00582C] p-8 text-white shadow-xl md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-[#00582C] p-8 text-white shadow-xl md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#B6D7E7]">
                 Leadership at Ruzawi
@@ -488,7 +513,7 @@ export default function SchoolLifePage() {
 
             <section
               id="learning-knights-award"
-              className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
                 Learning Knights Award
@@ -550,7 +575,7 @@ export default function SchoolLifePage() {
 
             <section
               id="ruzchats-life-skills-and-the-chat-room"
-              className="scroll-mt-56 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
+              className="scroll-mt-40 rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10 lg:scroll-mt-32"
             >
               <p className="text-sm font-bold uppercase tracking-[0.26em] text-[#47778D]">
                 RuzChats, Life Skills and The Chat Room
@@ -621,7 +646,7 @@ export default function SchoolLifePage() {
 
             <section
               id="world-peace-games"
-              className="scroll-mt-56 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
+              className="scroll-mt-40 overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5 lg:scroll-mt-32"
             >
               <div className="grid gap-0 lg:grid-cols-[1fr_1fr]">
                 <div className="p-8 md:p-10">
