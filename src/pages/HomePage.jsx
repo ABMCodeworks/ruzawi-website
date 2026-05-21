@@ -34,14 +34,14 @@ export default function HomePage() {
           >
             <source src="/videos/ruzawi-hero.webm" type="video/webm" />
             <source src="/videos/ruzawi-hero.mp4" type="video/mp4" />
-          </video>{" "}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/75" />
+          </video>
+
           <div className="relative z-10 flex min-h-screen max-w-4xl flex-col items-start justify-center px-6 pt-28 lg:ml-12 lg:px-8 xl:ml-20">
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="mb-5 text-sm font-bold uppercase tracking-[0.32em] text-[#B6D7E7]"
+              className="mb-5 text-sm font-bold uppercase tracking-[0.32em] text-[#B6D7E7] drop-shadow-[0_3px_10px_rgba(0,0,0,0.8)]"
             >
               Ruzawi School
             </motion.p>
@@ -50,7 +50,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 0.1 }}
-              className="max-w-3xl font-serif text-4xl font-semibold leading-[1.08] text-white md:text-5xl lg:text-6xl"
+              className="max-w-3xl font-serif text-4xl font-semibold leading-[1.08] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)] md:text-5xl lg:text-6xl"
             >
               Where Every Boy and Every Girl will find a place within our world
             </motion.h1>
@@ -70,13 +70,13 @@ export default function HomePage() {
 
               <a
                 href="/why-ruzawi"
-                className="inline-flex rounded-full border border-white/40 px-8 py-4 text-sm font-black uppercase tracking-[0.18em] text-white transition hover:bg-white hover:text-[#00582C]"
+                className="inline-flex rounded-full border border-white/50 bg-black/10 px-8 py-4 text-sm font-black uppercase tracking-[0.18em] text-white shadow-lg backdrop-blur-[1px] transition hover:bg-white hover:text-[#00582C]"
               >
                 Why Ruzawi
               </a>
             </motion.div>
           </div>
-        </section>
+        </section>{" "}
         <section className="w-full bg-[#47778D] px-6 py-8 text-center text-white lg:px-8">
           <div className="mx-auto max-w-7xl">
             <p className="font-serif text-xl leading-relaxed md:text-2xl lg:text-3xl">
