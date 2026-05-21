@@ -4,7 +4,7 @@ import { footerButtons } from "../data/siteData";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#47778D] px-6 py-20 lg:px-8">
+    <footer className="bg-[#47778D] px-6 py-20 text-white lg:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionIntro
           eyebrow="More from Ruzawi"
@@ -17,6 +17,54 @@ export default function Footer() {
           {footerButtons.map((item) => (
             <ImageLinkCard key={item.title} {...item} large />
           ))}
+        </div>
+
+        <div className="mt-12 border-t border-white/20 pt-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <p className="text-sm text-white/75">
+              © {new Date().getFullYear()} Ruzawi School. All rights reserved.
+            </p>
+
+            <nav
+              aria-label="Footer legal links"
+              className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-white/80"
+            >
+              <a
+                href="/privacy-policy"
+                className="underline-offset-4 transition hover:text-white hover:underline"
+              >
+                Privacy Policy
+              </a>
+
+              <a
+                href="/cookie-policy"
+                className="underline-offset-4 transition hover:text-white hover:underline"
+              >
+                Cookie Policy
+              </a>
+
+              <a
+                href="/terms-of-use"
+                className="underline-offset-4 transition hover:text-white hover:underline"
+              >
+                Terms of Use
+              </a>
+            </nav>
+          </div>
+
+          <p className="mt-4 max-w-4xl text-xs leading-6 text-white/70">
+            We use Microsoft Clarity to understand how visitors use our website
+            through behavioural metrics, heatmaps and session replay. This helps
+            us improve the website experience. By using this site, you agree
+            that Ruzawi School and Microsoft may collect and use this data.{" "}
+            <a
+              href="/privacy-policy"
+              className="font-semibold underline underline-offset-4 transition hover:text-white"
+            >
+              Read our Privacy Policy
+            </a>
+            .
+          </p>
         </div>
       </div>
     </footer>

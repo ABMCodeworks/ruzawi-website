@@ -17,6 +17,8 @@ import ContactPage from "./pages/ContactPage";
 import StaffPage from "./pages/StaffPage";
 import JuniorMastersApplicationPage from "./pages/JuniorMastersApplicationPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfUsePage from "./pages/TermsOfUsePage";
 
 export default function App() {
   return (
@@ -32,6 +34,8 @@ export default function App() {
         <Route path="/tradition-at-ruzawi" element={<TraditionRuzawiPage />} />
         <Route path="/governance" element={<GovernancePage />} />
         <Route path="/staff" element={<StaffPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms-of-use" element={<TermsOfUsePage />} />
         <Route
           path="/junior-masters-and-mistresses"
           element={<JuniorMastersMistressesPage />}
