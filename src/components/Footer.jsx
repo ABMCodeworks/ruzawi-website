@@ -37,13 +37,6 @@ export default function Footer() {
               </a>
 
               <a
-                href="/cookie-policy"
-                className="underline-offset-4 transition hover:text-white hover:underline"
-              >
-                Cookie Policy
-              </a>
-
-              <a
                 href="/terms-of-use"
                 className="underline-offset-4 transition hover:text-white hover:underline"
               >
