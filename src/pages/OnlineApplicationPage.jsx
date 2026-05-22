@@ -7,6 +7,9 @@ import SEO from "../components/SEO";
 const APPLICATION_ENDPOINT = "/.netlify/functions/application-confirmation";
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
+const MAX_FILE_SIZE_MB = 2;
+const MAX_TOTAL_UPLOAD_SIZE_MB = 4;
+
 const APPLICATION_PARENT_MESSAGE =
   "After submitting this form, Grade 1 and Grade 3 applicants, being the intake years, will be contacted by the school prior to their assessment. Applications for other grades will be automatically entered into our database and placed on our waitlist. You will be contacted if an assessment opportunity arises.";
 
@@ -19,11 +22,77 @@ const declarationCheckboxNames = [
   "assessment_confidential",
 ];
 
+const uploadFieldNames = [
+  "photo",
+  "family_photo",
+  "birth_certificate_copy",
+  "recent_report",
+  "proof_of_payment",
+];
+
+function fetchWithTimeout(url, options = {}, timeoutMs = 45000) {
+  const controller = new AbortController();
+
+  const timeoutId = window.setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  return fetch(url, {
+    ...options,
+    signal: controller.signal,
+  }).finally(() => {
+    window.clearTimeout(timeoutId);
+  });
+}
+
+function formatBytes(bytes) {
+  if (!Number.isFinite(bytes)) return "0 MB";
+
+  const mb = bytes / (1024 * 1024);
+  return `${mb.toFixed(1)} MB`;
+}
+
+function getFilesForField(form, fieldName) {
+  return Array.from(form.querySelector(`[name="${fieldName}"]`)?.files || []);
+}
+
 function validateFileCount(form, fieldName, max) {
-  const files = form.querySelector(`[name="${fieldName}"]`)?.files || [];
+  const files = getFilesForField(form, fieldName);
 
   if (files.length > max) {
     throw new Error(`${fieldName} can only have up to ${max} files.`);
+  }
+}
+
+function validateFileSize(form, fieldName, maxMb) {
+  const files = getFilesForField(form, fieldName);
+  const maxBytes = maxMb * 1024 * 1024;
+
+  const oversizedFile = files.find((file) => file.size > maxBytes);
+
+  if (oversizedFile) {
+    throw new Error(
+      `${oversizedFile.name} is too large. Please upload files smaller than ${maxMb}MB each.`,
+    );
+  }
+}
+
+function validateTotalUploadSize(form, fieldNames, maxMb) {
+  const maxBytes = maxMb * 1024 * 1024;
+
+  const totalBytes = fieldNames.reduce((total, fieldName) => {
+    const files = getFilesForField(form, fieldName);
+    const fieldTotal = files.reduce((sum, file) => sum + file.size, 0);
+
+    return total + fieldTotal;
+  }, 0);
+
+  if (totalBytes > maxBytes) {
+    throw new Error(
+      `Your uploaded files are too large in total. The current total is ${formatBytes(
+        totalBytes,
+      )}. Please keep all uploads together under ${maxMb}MB.`,
+    );
   }
 }
 
@@ -203,6 +272,14 @@ export default function OnlineApplicationPage() {
       validateFileCount(form, "recent_report", 3);
       validateFileCount(form, "proof_of_payment", 3);
 
+      validateFileSize(form, "photo", MAX_FILE_SIZE_MB);
+      validateFileSize(form, "family_photo", MAX_FILE_SIZE_MB);
+      validateFileSize(form, "birth_certificate_copy", MAX_FILE_SIZE_MB);
+      validateFileSize(form, "recent_report", MAX_FILE_SIZE_MB);
+      validateFileSize(form, "proof_of_payment", MAX_FILE_SIZE_MB);
+
+      validateTotalUploadSize(form, uploadFieldNames, MAX_TOTAL_UPLOAD_SIZE_MB);
+
       const recaptchaToken = recaptchaRef.current?.getValue();
 
       if (!recaptchaToken) {
@@ -222,10 +299,14 @@ export default function OnlineApplicationPage() {
       formData.append("parentConfirmationMessage", APPLICATION_PARENT_MESSAGE);
       formData.append("recaptchaToken", recaptchaToken);
 
-      const response = await fetch(APPLICATION_ENDPOINT, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetchWithTimeout(
+        APPLICATION_ENDPOINT,
+        {
+          method: "POST",
+          body: formData,
+        },
+        45000,
+      );
 
       const result = await response.json().catch(() => ({}));
 
@@ -253,9 +334,19 @@ export default function OnlineApplicationPage() {
 
       recaptchaRef.current?.reset();
 
+      const message =
+        error.name === "AbortError"
+          ? "The application is taking too long to submit. Please check that your uploaded files are not too large, then try again."
+          : error.message || "Something went wrong.";
+
       setStatus({
         type: "error",
-        message: error.message || "Something went wrong.",
+        message,
+      });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
       });
     } finally {
       setSubmitting(false);
@@ -313,11 +404,10 @@ export default function OnlineApplicationPage() {
         {status.message && (
           <section className="mx-auto max-w-[1200px] px-6 pt-10 lg:px-8">
             <div
-              className={`rounded-[2rem] p-6 text-lg font-semibold shadow-sm ring-1 ring-black/5 ${
-                status.type === "success"
+              className={`rounded-[2rem] p-6 text-lg font-semibold shadow-sm ring-1 ring-black/5 ${status.type === "success"
                   ? "bg-[#00582C] text-white"
                   : "bg-red-50 text-red-800"
-              }`}
+                }`}
             >
               {status.message}
             </div>
@@ -460,7 +550,7 @@ export default function OnlineApplicationPage() {
                     accept="image/*"
                     multiple
                     required
-                    helper="You can upload up to 2 files."
+                    helper={`You can upload up to 2 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
                   />
 
                   <FileInput
@@ -468,7 +558,7 @@ export default function OnlineApplicationPage() {
                     name="family_photo"
                     accept="image/*"
                     multiple
-                    helper="You can upload up to 2 files."
+                    helper={`You can upload up to 2 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
                   />
                 </div>
 
@@ -566,7 +656,7 @@ export default function OnlineApplicationPage() {
                     accept="image/*,.pdf"
                     multiple
                     required
-                    helper="You can upload up to 3 files."
+                    helper={`You can upload up to 3 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
                   />
 
                   <FileInput
@@ -574,7 +664,7 @@ export default function OnlineApplicationPage() {
                     name="recent_report"
                     accept="image/*,.pdf"
                     multiple
-                    helper="You can upload up to 3 files."
+                    helper={`You can upload up to 3 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
                   />
                 </div>
 
@@ -787,7 +877,7 @@ export default function OnlineApplicationPage() {
                   accept="image/*,.pdf"
                   multiple
                   required
-                  helper="You can upload up to 3 files."
+                  helper={`You can upload up to 3 files. Each file must be under ${MAX_FILE_SIZE_MB}MB. All uploads together should stay under ${MAX_TOTAL_UPLOAD_SIZE_MB}MB.`}
                 />
               </section>
 

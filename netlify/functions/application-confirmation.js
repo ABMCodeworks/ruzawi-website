@@ -26,6 +26,23 @@ function jsonResponse(statusCode, body) {
   };
 }
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = 25000) {
+  const controller = new AbortController();
+
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 function escapeHtml(value = "") {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -97,6 +114,14 @@ function parseMultipartForm(event) {
         chunks.push(data);
       });
 
+      file.on("limit", () => {
+        reject(
+          new Error(
+            `The file "${filename || name}" is too large. Please upload a smaller file.`,
+          ),
+        );
+      });
+
       file.on("end", () => {
         if (!filename) return;
 
@@ -138,15 +163,32 @@ async function verifyRecaptcha(token, expectedAction = "") {
   params.append("secret", process.env.RECAPTCHA_SECRET_KEY);
   params.append("response", token);
 
-  const response = await fetch(RECAPTCHA_VERIFY_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: params,
-  });
+  let response;
 
-  const result = await response.json();
+  try {
+    response = await fetchWithTimeout(
+      RECAPTCHA_VERIFY_URL,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params,
+      },
+      10000,
+    );
+  } catch (error) {
+    if (error.name === "AbortError") {
+      return {
+        ok: false,
+        reason: "reCAPTCHA verification timed out. Please try again.",
+      };
+    }
+
+    throw error;
+  }
+
+  const result = await response.json().catch(() => ({}));
 
   if (!result.success) {
     return {
@@ -182,13 +224,29 @@ async function forwardApplicationToBackend(event) {
     throw new Error("Missing content-type header.");
   }
 
-  const response = await fetch(APPLICATION_BACKEND_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "Content-Type": contentType,
-    },
-    body: bodyBuffer,
-  });
+  let response;
+
+  try {
+    response = await fetchWithTimeout(
+      APPLICATION_BACKEND_ENDPOINT,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": contentType,
+        },
+        body: bodyBuffer,
+      },
+      25000,
+    );
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error(
+        "The application database took too long to respond. Please try again with smaller files.",
+      );
+    }
+
+    throw error;
+  }
 
   const text = await response.text();
 
@@ -463,9 +521,8 @@ export async function handler(event) {
         "Ruzawi Website <website@your-verified-domain.com>",
       to: guardianEmails,
       replyTo: "registrar@ruzawi.com",
-      subject: `Ruzawi School Application Submission Successful - ${
-        confirmationEmail.studentName || confirmationEmail.grade
-      }`,
+      subject: `Ruzawi School Application Submission Successful - ${confirmationEmail.studentName || confirmationEmail.grade
+        }`,
       text: confirmationEmail.text,
       html: confirmationEmail.html,
     });
@@ -473,7 +530,7 @@ export async function handler(event) {
     if (guardianSendResult.error) {
       throw new Error(
         guardianSendResult.error.message ||
-          "Application was submitted, but the confirmation email could not be sent.",
+        "Application was submitted, but the confirmation email could not be sent.",
       );
     }
 
@@ -486,9 +543,8 @@ export async function handler(event) {
           "Ruzawi Website <website@your-verified-domain.com>",
         to: process.env.APPLICATION_ADMIN_EMAIL,
         replyTo: guardianEmails[0],
-        subject: `Online Application Submitted - ${
-          confirmationEmail.studentName || confirmationEmail.grade
-        }`,
+        subject: `Online Application Submitted - ${confirmationEmail.studentName || confirmationEmail.grade
+          }`,
         text: adminEmail.text,
         html: adminEmail.html,
       });
@@ -505,9 +561,13 @@ export async function handler(event) {
   } catch (error) {
     console.error("Application confirmation error:", error);
 
+    const message =
+      error.name === "AbortError"
+        ? "The application took too long to submit. Please try again with smaller files."
+        : error.message || "There was a problem submitting the application.";
+
     return jsonResponse(500, {
-      message:
-        error.message || "There was a problem submitting the application.",
+      message,
     });
   }
 }
