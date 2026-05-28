@@ -415,7 +415,7 @@ export default function AcademicLifePage() {
 
                 <p>
                   Each grade benefits from small class sizes, with a maximum of
-                  15 children per class. This intimate setting has already made
+                  20 children per class. This intimate setting has already made
                   a significant difference to our pupils’ academic progress and
                   personal development, allowing every child to receive
                   individual attention and support. Looking ahead, our vision is

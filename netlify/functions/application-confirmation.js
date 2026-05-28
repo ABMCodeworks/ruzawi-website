@@ -129,6 +129,7 @@ function parseMultipartForm(event) {
           fieldName: name,
           filename,
           contentType: mimeType,
+          sizeBytes: Buffer.concat(chunks).length,
           buffer: Buffer.concat(chunks),
         });
       });
@@ -267,19 +268,26 @@ async function forwardApplicationToBackend(event) {
   };
 }
 
-function buildConfirmationEmail(fields) {
-  const studentName = [
+function getStudentName(fields = {}) {
+  return [
     clean(fields.student_name),
     clean(fields.student_middlename),
     clean(fields.student_surname),
   ]
     .filter(Boolean)
     .join(" ");
+}
 
+function getRequiredEntry(fields = {}) {
+  return [clean(fields.start_month), clean(fields.start_year)]
+    .filter(Boolean)
+    .join(" ");
+}
+
+function buildConfirmationEmail(fields) {
+  const studentName = getStudentName(fields);
   const grade = clean(fields.grade) || "Not provided";
-  const startMonth = clean(fields.start_month);
-  const startYear = clean(fields.start_year);
-  const requiredEntry = [startMonth, startYear].filter(Boolean).join(" ");
+  const requiredEntry = getRequiredEntry(fields);
 
   const safeStudentName = escapeHtml(studentName || "your child");
   const safeGrade = escapeHtml(grade);
@@ -362,17 +370,8 @@ Ruzawi School
 }
 
 function buildAdminEmail(fields, backendResult) {
-  const studentName = [
-    clean(fields.student_name),
-    clean(fields.student_middlename),
-    clean(fields.student_surname),
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const requiredEntry = [fields.start_month, fields.start_year]
-    .filter(Boolean)
-    .join(" ");
+  const studentName = getStudentName(fields);
+  const requiredEntry = getRequiredEntry(fields);
 
   const safeStudentName = escapeHtml(studentName || "Not provided");
   const safeGrade = escapeHtml(fields.grade || "Not provided");
@@ -422,7 +421,192 @@ ${backendResult?.message || "Application submitted to backend successfully."}
   };
 }
 
+function buildFailedApplicationAttemptEmail({
+  fields = {},
+  files = [],
+  reason = "Unknown error.",
+  backend = null,
+}) {
+  const studentName = getStudentName(fields);
+  const requiredEntry = getRequiredEntry(fields);
+
+  const guardianEmails = uniqueEmails([
+    fields.guardian1_email,
+    fields.guardian2_email,
+  ]);
+
+  const submittedAt = new Date().toISOString();
+
+  const fileSummary = files.length
+    ? files
+        .map((file) => {
+          const sizeMb = file.sizeBytes
+            ? `${(file.sizeBytes / 1024 / 1024).toFixed(2)} MB`
+            : "Unknown size";
+
+          return `${file.fieldName}: ${file.filename} (${file.contentType || "unknown type"}, ${sizeMb})`;
+        })
+        .join("\n")
+    : "No files received or files could not be read.";
+
+  const backendSummary = backend
+    ? JSON.stringify(backend, null, 2)
+    : "No backend response available.";
+
+  const text = `
+Failed online application attempt
+
+Submitted at: ${submittedAt}
+
+Failure reason:
+${reason}
+
+Child: ${studentName || "Not provided"}
+Grade: ${fields.grade || "Not provided"}
+Required entry: ${requiredEntry || "Not provided"}
+
+Guardian 1 Name: ${fields.guardian1_name || "Not provided"}
+Guardian 1 Email: ${fields.guardian1_email || "Not provided"}
+Guardian 1 Phone: ${fields.guardian1_phone || "Not provided"}
+
+Guardian 2 Name: ${fields.guardian2_name || "Not provided"}
+Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
+Guardian 2 Phone: ${fields.guardian2_phone || "Not provided"}
+
+Parent/guardian emails detected:
+${guardianEmails.length ? guardianEmails.join(", ") : "None"}
+
+Files received:
+${fileSummary}
+
+Backend response:
+${backendSummary}
+`.trim();
+
+  const htmlFiles = files.length
+    ? files
+        .map((file) => {
+          const sizeMb = file.sizeBytes
+            ? `${(file.sizeBytes / 1024 / 1024).toFixed(2)} MB`
+            : "Unknown size";
+
+          return `
+            <li>
+              <strong>${escapeHtml(file.fieldName)}:</strong>
+              ${escapeHtml(file.filename)}
+              <br />
+              <span style="color: #666;">
+                ${escapeHtml(file.contentType || "unknown type")} — ${escapeHtml(sizeMb)}
+              </span>
+            </li>
+          `;
+        })
+        .join("")
+    : "<li>No files received or files could not be read.</li>";
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #10251c;">
+      <h2 style="color: #b42318;">Failed Online Application Attempt</h2>
+
+      <p>
+        A parent/guardian attempted to submit an online application, but the process failed.
+      </p>
+
+      <div style="background: #fff1f0; border: 1px solid #ffccc7; padding: 18px; border-radius: 14px; margin: 22px 0;">
+        <p style="margin: 0 0 8px;"><strong>Submitted at:</strong> ${escapeHtml(submittedAt)}</p>
+        <p style="margin: 0;"><strong>Failure reason:</strong> ${escapeHtml(reason)}</p>
+      </div>
+
+      <h3 style="color: #00582C;">Application details</h3>
+
+      <p><strong>Child:</strong> ${escapeHtml(studentName || "Not provided")}</p>
+      <p><strong>Grade:</strong> ${escapeHtml(fields.grade || "Not provided")}</p>
+      <p><strong>Required entry:</strong> ${escapeHtml(requiredEntry || "Not provided")}</p>
+
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
+
+      <h3 style="color: #00582C;">Parent/guardian details</h3>
+
+      <p><strong>Guardian 1 Name:</strong> ${escapeHtml(fields.guardian1_name || "Not provided")}</p>
+      <p><strong>Guardian 1 Email:</strong> ${escapeHtml(fields.guardian1_email || "Not provided")}</p>
+      <p><strong>Guardian 1 Phone:</strong> ${escapeHtml(fields.guardian1_phone || "Not provided")}</p>
+
+      <p><strong>Guardian 2 Name:</strong> ${escapeHtml(fields.guardian2_name || "Not provided")}</p>
+      <p><strong>Guardian 2 Email:</strong> ${escapeHtml(fields.guardian2_email || "Not provided")}</p>
+      <p><strong>Guardian 2 Phone:</strong> ${escapeHtml(fields.guardian2_phone || "Not provided")}</p>
+
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
+
+      <h3 style="color: #00582C;">Files received</h3>
+      <ul>
+        ${htmlFiles}
+      </ul>
+
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
+
+      <h3 style="color: #00582C;">Backend response</h3>
+
+      <pre style="white-space: pre-wrap; background: #f6f1e7; padding: 14px; border-radius: 10px; font-size: 13px;">${escapeHtml(
+        backendSummary,
+      )}</pre>
+    </div>
+  `;
+
+  return {
+    studentName,
+    grade: clean(fields.grade),
+    guardianEmails,
+    text,
+    html,
+  };
+}
+
+async function sendFailedApplicationAttemptEmail({
+  fields = {},
+  files = [],
+  reason = "Unknown error.",
+  backend = null,
+}) {
+  const to =
+    process.env.APPLICATION_FAILED_EMAIL || process.env.APPLICATION_ADMIN_EMAIL;
+
+  if (!to) {
+    console.error(
+      "Failed application attempt could not be emailed because APPLICATION_FAILED_EMAIL or APPLICATION_ADMIN_EMAIL is not set.",
+    );
+    return;
+  }
+
+  const failedEmail = buildFailedApplicationAttemptEmail({
+    fields,
+    files,
+    reason,
+    backend,
+  });
+
+  const subjectName =
+    failedEmail.studentName || failedEmail.grade || "Unknown applicant";
+
+  const sendResult = await resend.emails.send({
+    from:
+      process.env.RESEND_FROM ||
+      "Ruzawi Website <website@your-verified-domain.com>",
+    to,
+    replyTo: failedEmail.guardianEmails[0] || "registrar@ruzawi.com",
+    subject: `Failed Online Application Attempt - ${subjectName}`,
+    text: failedEmail.text,
+    html: failedEmail.html,
+  });
+
+  if (sendResult.error) {
+    console.error("Failed application attempt email failed:", sendResult.error);
+  }
+}
+
 export async function handler(event) {
+  let parsedFields = {};
+  let parsedFiles = [];
+
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 204,
@@ -442,11 +626,20 @@ export async function handler(event) {
       throw new Error("Missing RESEND_API_KEY.");
     }
 
-    const { fields } = await parseMultipartForm(event);
+    const { fields, files } = await parseMultipartForm(event);
+
+    parsedFields = fields;
+    parsedFiles = files;
 
     const website = clean(fields.website);
     const recaptchaToken = clean(fields.recaptchaToken);
 
+    /*
+      Honeypot spam check.
+
+      We intentionally do not email failed-attempt notifications for this,
+      because bots may fill this field and could spam the school inbox.
+    */
     if (website) {
       return jsonResponse(200, {
         message: "Application submitted.",
@@ -459,6 +652,12 @@ export async function handler(event) {
     ]);
 
     if (!guardianEmails.length) {
+      await sendFailedApplicationAttemptEmail({
+        fields,
+        files,
+        reason: "No parent/guardian email address was provided.",
+      });
+
       return jsonResponse(400, {
         message: "Please provide at least one parent/guardian email address.",
       });
@@ -486,6 +685,12 @@ export async function handler(event) {
     });
 
     if (missingField) {
+      await sendFailedApplicationAttemptEmail({
+        fields,
+        files,
+        reason: `Missing required field: ${missingField}`,
+      });
+
       return jsonResponse(400, {
         message: "Please complete all required application fields.",
         missingField,
@@ -495,6 +700,12 @@ export async function handler(event) {
     const recaptcha = await verifyRecaptcha(recaptchaToken);
 
     if (!recaptcha.ok) {
+      await sendFailedApplicationAttemptEmail({
+        fields,
+        files,
+        reason: recaptcha.reason,
+      });
+
       return jsonResponse(400, {
         message: recaptcha.reason,
       });
@@ -504,6 +715,15 @@ export async function handler(event) {
 
     if (!backendResponse.ok) {
       console.error("Application backend failed:", backendResponse.result);
+
+      await sendFailedApplicationAttemptEmail({
+        fields,
+        files,
+        reason:
+          backendResponse.result?.message ||
+          "The application could not be submitted to the application database.",
+        backend: backendResponse.result,
+      });
 
       return jsonResponse(backendResponse.status || 500, {
         message:
@@ -521,16 +741,26 @@ export async function handler(event) {
         "Ruzawi Website <website@your-verified-domain.com>",
       to: guardianEmails,
       replyTo: "registrar@ruzawi.com",
-      subject: `Ruzawi School Application Submission Successful - ${confirmationEmail.studentName || confirmationEmail.grade
-        }`,
+      subject: `Ruzawi School Application Submission Successful - ${
+        confirmationEmail.studentName || confirmationEmail.grade
+      }`,
       text: confirmationEmail.text,
       html: confirmationEmail.html,
     });
 
     if (guardianSendResult.error) {
+      await sendFailedApplicationAttemptEmail({
+        fields,
+        files,
+        reason:
+          guardianSendResult.error.message ||
+          "Application was submitted to the backend, but the confirmation email could not be sent.",
+        backend: backendResponse.result,
+      });
+
       throw new Error(
         guardianSendResult.error.message ||
-        "Application was submitted, but the confirmation email could not be sent.",
+          "Application was submitted, but the confirmation email could not be sent.",
       );
     }
 
@@ -543,8 +773,9 @@ export async function handler(event) {
           "Ruzawi Website <website@your-verified-domain.com>",
         to: process.env.APPLICATION_ADMIN_EMAIL,
         replyTo: guardianEmails[0],
-        subject: `Online Application Submitted - ${confirmationEmail.studentName || confirmationEmail.grade
-          }`,
+        subject: `Online Application Submitted - ${
+          confirmationEmail.studentName || confirmationEmail.grade
+        }`,
         text: adminEmail.text,
         html: adminEmail.html,
       });
@@ -565,6 +796,25 @@ export async function handler(event) {
       error.name === "AbortError"
         ? "The application took too long to submit. Please try again with smaller files."
         : error.message || "There was a problem submitting the application.";
+
+    /*
+      Best-effort failed attempt email for unexpected errors.
+      This will only send if we successfully parsed the form first.
+    */
+    if (Object.keys(parsedFields || {}).length) {
+      try {
+        await sendFailedApplicationAttemptEmail({
+          fields: parsedFields,
+          files: parsedFiles,
+          reason: message,
+        });
+      } catch (emailError) {
+        console.error(
+          "Could not send failed application attempt email from catch block:",
+          emailError,
+        );
+      }
+    }
 
     return jsonResponse(500, {
       message,
