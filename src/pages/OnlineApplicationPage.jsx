@@ -179,7 +179,7 @@ function FileInput({
   label,
   name,
   required = false,
-  accept = "image/*,.pdf",
+  accept = "image/*,.heic,.heif,.pdf",
   multiple = false,
   helper = "",
 }) {
@@ -547,7 +547,7 @@ export default function OnlineApplicationPage() {
                   <FileInput
                     label="Photo of Child"
                     name="photo"
-                    accept="image/*"
+                    accept="image/*,.heic,.heif"
                     multiple
                     required
                     helper={`You can upload up to 2 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
@@ -556,7 +556,7 @@ export default function OnlineApplicationPage() {
                   <FileInput
                     label="Photo of Child with Family"
                     name="family_photo"
-                    accept="image/*"
+                    accept="image/*,.heic,.heif"
                     multiple
                     helper={`You can upload up to 2 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
                   />
@@ -653,7 +653,7 @@ export default function OnlineApplicationPage() {
                   <FileInput
                     label="Birth Certificate"
                     name="birth_certificate_copy"
-                    accept="image/*,.pdf"
+                    accept="image/*,.heic,.heif,.pdf"
                     multiple
                     required
                     helper={`You can upload up to 3 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
@@ -662,7 +662,7 @@ export default function OnlineApplicationPage() {
                   <FileInput
                     label="Recent School Report, Grade 2 - 7"
                     name="recent_report"
-                    accept="image/*,.pdf"
+                    accept="image/*,.heic,.heif,.pdf"
                     multiple
                     helper={`You can upload up to 3 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
                   />
@@ -874,7 +874,7 @@ export default function OnlineApplicationPage() {
                 <FileInput
                   label="Proof of Payment"
                   name="proof_of_payment"
-                  accept="image/*,.pdf"
+                  accept="image/*,.heic,.heif,.pdf"
                   multiple
                   required
                   helper={`You can upload up to 3 files. Each file must be under ${MAX_FILE_SIZE_MB}MB. All uploads together should stay under ${MAX_TOTAL_UPLOAD_SIZE_MB}MB.`}
