@@ -9,6 +9,7 @@ const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const MAX_FILE_SIZE_MB = 2;
 const MAX_TOTAL_UPLOAD_SIZE_MB = 4;
+const LEGAL_NOTICE_VERSION = "2026-08-21";
 
 const APPLICATION_PARENT_MESSAGE =
   "After submitting this form, Grade 1 and Grade 3 applicants, being the intake years, will be contacted by the school prior to their assessment. Applications for other grades will be automatically entered into our database and placed on our waitlist. You will be contacted if an assessment opportunity arises.";
@@ -20,6 +21,12 @@ const declarationCheckboxNames = [
   "headmaster_class_decision",
   "withdrawal_notice",
   "assessment_confidential",
+  "guardian_authority_consent",
+  "sensitive_data_consent",
+  "international_transfer_consent",
+  "third_party_authority",
+  "privacy_notice_acknowledgement",
+  "terms_acceptance",
 ];
 
 const uploadFieldNames = [
@@ -103,6 +110,7 @@ function TextInput({
   required = false,
   placeholder = "",
   min,
+  helper = "",
 }) {
   return (
     <label className="block">
@@ -118,6 +126,8 @@ function TextInput({
         min={min}
         className="w-full rounded-2xl border border-black/10 bg-white px-5 py-4 text-[#10251c] outline-none transition focus:border-[#47778D] focus:ring-4 focus:ring-[#B6D7E7]/50"
       />
+
+      {helper && <p className="mt-2 text-sm text-[#35443a]">{helper}</p>}
     </label>
   );
 }
@@ -128,6 +138,7 @@ function TextArea({
   required = false,
   rows = 4,
   placeholder = "",
+  helper = "",
 }) {
   return (
     <label className="block">
@@ -142,6 +153,8 @@ function TextArea({
         placeholder={placeholder}
         className="w-full rounded-2xl border border-black/10 bg-white px-5 py-4 text-[#10251c] outline-none transition focus:border-[#47778D] focus:ring-4 focus:ring-[#B6D7E7]/50"
       />
+
+      {helper && <p className="mt-2 text-sm text-[#35443a]">{helper}</p>}
     </label>
   );
 }
@@ -295,6 +308,9 @@ export default function OnlineApplicationPage() {
 
         formData.set(name, "1");
       });
+
+      formData.set("legal_notice_version", LEGAL_NOTICE_VERSION);
+      formData.set("consent_recorded_at", new Date().toISOString());
 
       formData.append("parentConfirmationMessage", APPLICATION_PARENT_MESSAGE);
       formData.append("recaptchaToken", recaptchaToken);
@@ -540,6 +556,58 @@ export default function OnlineApplicationPage() {
 
           <div className="rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10">
             <form onSubmit={handleSubmit} className="space-y-10">
+              <section className="rounded-[2rem] bg-[#B6D7E7]/35 p-6 ring-1 ring-[#47778D]/20 md:p-8">
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#47778D]">
+                  Admissions privacy notice
+                </p>
+                <h2 className="mt-3 font-serif text-3xl font-semibold text-[#00582C]">
+                  Please read before providing personal information
+                </h2>
+                <div className="mt-4 space-y-3 leading-7 text-[#35443a]">
+                  <p>
+                    Ruzawi School, Ruzawi Road, Marondera, is the data
+                    controller. We use this information to verify, assess and
+                    administer the application, communicate with guardians,
+                    manage assessments and waiting lists, reconcile the
+                    application fee, protect the form and meet legal duties.
+                  </p>
+                  <p>
+                    Required fields and declarations are needed to submit and
+                    assess the application; without them, we cannot continue.
+                    Optional fields may be left blank. Information is available
+                    only to authorised school personnel and relevant processors,
+                    including our hosting/form, application-database,
+                    transactional-email and anti-abuse providers. Some providers
+                    may process information outside Zimbabwe subject to the
+                    safeguards or consent described in our Privacy Policy.
+                  </p>
+                  <p>
+                    We retain records only for as long as required by the
+                    application or school relationship, an active waiting list,
+                    safeguarding, accounting and legal requirements. You or the
+                    child through a parent/legal guardian may request access,
+                    correction, objection or applicable deletion, or withdraw
+                    consent free of charge, by emailing{" "}
+                    <a
+                      href="mailto:admin@ruzawi.com"
+                      className="font-bold text-[#00582C] underline underline-offset-4"
+                    >
+                      admin@ruzawi.com
+                    </a>
+                    . Read the full{" "}
+                    <a
+                      href="/privacy-policy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold text-[#00582C] underline underline-offset-4"
+                    >
+                  Privacy Policy
+                    </a>
+                    .
+                  </p>
+                </div>
+              </section>
+
               <section className="space-y-6">
                 <SectionTitle>Child Details</SectionTitle>
 
@@ -622,7 +690,11 @@ export default function OnlineApplicationPage() {
                     <option>Boy</option>
                   </SelectInput>
 
-                  <TextInput label="Religion" name="religion" required />
+                  <TextInput
+                    label="Religion (optional)"
+                    name="religion"
+                    helper="Provide this only if it is relevant to the child’s admissions or pastoral context."
+                  />
                 </div>
 
                 <SelectInput
@@ -641,7 +713,11 @@ export default function OnlineApplicationPage() {
                 />
 
                 <div className="grid gap-6 md:grid-cols-2">
-                  <TextInput label="ID Number" name="id_number" required />
+                  <TextInput
+                    label="ID Number (optional)"
+                    name="id_number"
+                    helper="Leave blank if the child does not have a separate national ID number."
+                  />
 
                   <TextInput
                     label="Birth Certificate Number"
@@ -681,6 +757,12 @@ export default function OnlineApplicationPage() {
                   <option>Mainly With Father</option>
                   <option>Other</option>
                 </SelectInput>
+
+                <p className="rounded-2xl bg-[#f6f1e7] p-5 text-sm leading-7 text-[#35443a] ring-1 ring-black/5">
+                  We ask about living arrangements only to understand relevant
+                  care, safeguarding and communication needs. Use the description
+                  field only where additional context is necessary.
+                </p>
 
                 <TextArea
                   label="Living Situation Description"
@@ -764,16 +846,14 @@ export default function OnlineApplicationPage() {
                       <GuardianTitleSelect
                         label="Title"
                         name="guardian2_title"
-                        required
                       />
 
-                      <TextInput label="Name" name="guardian2_name" required />
+                      <TextInput label="Name" name="guardian2_name" />
 
                       <TextInput
                         label="Email"
                         name="guardian2_email"
                         type="email"
-                        required
                       />
 
                       <TextInput
@@ -791,8 +871,12 @@ export default function OnlineApplicationPage() {
                         label="Physical Address"
                         name="guardian2_physical_address"
                         rows={3}
-                        required
                       />
+
+                      <p className="text-sm leading-6 text-[#35443a]">
+                        Parent/Guardian 2 is optional. Leave this section blank
+                        where there is only one parent or legal guardian to list.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -865,10 +949,10 @@ export default function OnlineApplicationPage() {
                 </div>
 
                 <TextArea
-                  label="Family Status or Important Information"
+                  label="Family Status or Important Information (optional)"
                   name="family_status_or_important_info"
                   rows={5}
-                  required
+                  helper="Provide only information relevant to admissions, communication, safeguarding or the child’s welfare."
                 />
 
                 <FileInput
@@ -883,6 +967,84 @@ export default function OnlineApplicationPage() {
 
               <section className="space-y-5">
                 <SectionTitle>Declarations</SectionTitle>
+
+                <div className="rounded-2xl bg-[#B6D7E7]/35 p-5 text-[#00582C] ring-1 ring-[#47778D]/20">
+                  <h3 className="font-serif text-2xl font-semibold">
+                    Privacy, authority and electronic consent
+                  </h3>
+                  <p className="mt-2 leading-7">
+                    These confirmations are required by the nature of a child’s
+                    application and will be stored with the legal-custodian name,
+                    capacity, date, notice version and submission timestamp.
+                  </p>
+                </div>
+
+                <CheckboxInput name="guardian_authority_consent">
+                  I confirm that I am the child’s parent or legal guardian, or am
+                  lawfully authorised by the parent or legal guardian, and I
+                  expressly consent to Ruzawi School processing the child’s
+                  personal information for the admissions, assessment, waiting
+                  list, communication, safeguarding and related administration
+                  purposes described above.
+                </CheckboxInput>
+
+                <CheckboxInput name="sensitive_data_consent">
+                  I give specific written electronic consent to the processing
+                  of the sensitive information included in this application,
+                  which may include the child’s health, religion, age, sex,
+                  family status, education and financial information, for the
+                  stated admissions, pupil-welfare and school-administration
+                  purposes. I understand that consent may be withdrawn free of
+                  charge, but that necessary processing may then be unable to
+                  continue.
+                </CheckboxInput>
+
+                <CheckboxInput name="international_transfer_consent">
+                  I unambiguously consent to necessary hosting, form handling,
+                  application-database, transactional-email and anti-abuse
+                  providers processing or routing this application outside
+                  Zimbabwe where applicable, subject to the protections and
+                  purposes described in the Privacy Policy.
+                </CheckboxInput>
+
+                <CheckboxInput name="third_party_authority">
+                  I confirm that I am authorised to provide the personal
+                  information of the other guardians, siblings, fee payer and
+                  referees named here, and that I have told them that Ruzawi may
+                  use their details to administer or verify this application.
+                </CheckboxInput>
+
+                <CheckboxInput name="privacy_notice_acknowledgement">
+                  I acknowledge that I have read the admissions privacy notice
+                  above and the{" "}
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-[#00582C] underline underline-offset-4"
+                  >
+                    Privacy Policy
+                  </a>{" "}
+                  (version {LEGAL_NOTICE_VERSION}).
+                </CheckboxInput>
+
+                <CheckboxInput name="terms_acceptance">
+                  I have read and agree to the{" "}
+                  <a
+                    href="/terms-of-use"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-[#00582C] underline underline-offset-4"
+                  >
+                    Terms of Use
+                  </a>{" "}
+                  (version {LEGAL_NOTICE_VERSION}) governing this electronic
+                  submission.
+                </CheckboxInput>
+
+                <h3 className="pt-3 font-serif text-2xl font-semibold text-[#00582C]">
+                  Application declarations
+                </h3>
 
                 <CheckboxInput name="certify_complete">
                   I certify that the information given on this application is

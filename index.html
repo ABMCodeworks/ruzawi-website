@@ -1,10 +1,11 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script src="https://cdn.cookiehub.eu/c2/9ed277e5.js"></script>
     <script type="text/javascript">
-      document.addEventListener("DOMContentLoaded", function (event) {
+      document.addEventListener("DOMContentLoaded", function () {
         var cpm = {};
-        window.cookiehub.load(cpm);
+        if (window.cookiehub) window.cookiehub.load(cpm);
       });
     </script>
     <meta charset="UTF-8" />
@@ -78,7 +79,7 @@
         ]
       }
     </script>
-    <script type="text/javascript">
+    <script type="text/plain" data-consent="analytics">
       (function (c, l, a, r, i, t, y) {
         c[a] =
           c[a] ||
@@ -94,10 +95,11 @@
     </script>
     <!-- Google tag (gtag.js) -->
     <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-SWTZDBNHEC"
+      type="text/plain"
+      data-consent="analytics"
+      data-src="https://www.googletagmanager.com/gtag/js?id=G-SWTZDBNHEC"
     ></script>
-    <script>
+    <script type="text/plain" data-consent="analytics">
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
@@ -106,7 +108,6 @@
 
       gtag("config", "G-SWTZDBNHEC");
     </script>
-    <script src="https://cdn.cookiehub.eu/c2/9ed277e5.js"></script>
   </head>
 
   <body>

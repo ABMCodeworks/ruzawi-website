@@ -42,14 +42,27 @@ export default function Footer() {
               >
                 Terms of Use
               </a>
+
+              <a
+                href="/cookie-policy"
+                className="underline-offset-4 transition hover:text-white hover:underline"
+              >
+                Cookie Policy
+              </a>
+
+              <button
+                type="button"
+                className="ch2-open-settings-btn underline-offset-4 transition hover:text-white hover:underline"
+              >
+                Cookie settings
+              </button>
             </nav>
           </div>
 
           <p className="mt-4 max-w-4xl text-xs leading-6 text-white/70">
-            We use Microsoft Clarity to understand how visitors use our website
-            through behavioural metrics, heatmaps and session replay. This helps
-            us improve the website experience. By using this site, you agree
-            that Ruzawi School and Microsoft may collect and use this data.{" "}
+            Optional analytics, including Google Analytics and Microsoft
+            Clarity, load only when you allow analytics cookies. You can change
+            that choice at any time using “Cookie settings”.{" "}
             <a
               href="/privacy-policy"
               className="font-semibold underline underline-offset-4 transition hover:text-white"

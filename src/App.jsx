@@ -19,6 +19,7 @@ import JuniorMastersApplicationPage from "./pages/JuniorMastersApplicationPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfUsePage from "./pages/TermsOfUsePage";
+import CookiePolicyPage from "./pages/CookiePolicyPage";
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/staff" element={<StaffPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/terms-of-use" element={<TermsOfUsePage />} />
+        <Route path="/cookie-policy" element={<CookiePolicyPage />} />
         <Route
           path="/junior-masters-and-mistresses"
           element={<JuniorMastersMistressesPage />}

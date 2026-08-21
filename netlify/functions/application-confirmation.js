@@ -9,6 +9,22 @@ const APPLICATION_BACKEND_ENDPOINT =
   process.env.APPLICATION_BACKEND_ENDPOINT ||
   "https://web09823.ruzawi.com/api/applications";
 
+const LEGAL_NOTICE_VERSION = "2026-08-21";
+const REQUIRED_DECLARATION_FIELDS = [
+  "certify_complete",
+  "no_outstanding_fees",
+  "financial_ability",
+  "headmaster_class_decision",
+  "withdrawal_notice",
+  "assessment_confidential",
+  "guardian_authority_consent",
+  "sensitive_data_consent",
+  "international_transfer_consent",
+  "third_party_authority",
+  "privacy_notice_acknowledgement",
+  "terms_acceptance",
+];
+
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -217,13 +233,23 @@ async function verifyRecaptcha(token, expectedAction = "") {
   };
 }
 
-async function forwardApplicationToBackend(event) {
-  const contentType = getContentType(event);
-  const bodyBuffer = getBodyBuffer(event);
+async function forwardApplicationToBackend(fields, files) {
+  const outboundForm = new FormData();
 
-  if (!contentType) {
-    throw new Error("Missing content-type header.");
-  }
+  Object.entries(fields).forEach(([name, value]) => {
+    if (name === "recaptchaToken" || name === "website") return;
+    outboundForm.append(name, value);
+  });
+
+  files.forEach((file) => {
+    outboundForm.append(
+      file.fieldName,
+      new Blob([file.buffer], {
+        type: file.contentType || "application/octet-stream",
+      }),
+      file.filename,
+    );
+  });
 
   let response;
 
@@ -232,10 +258,7 @@ async function forwardApplicationToBackend(event) {
       APPLICATION_BACKEND_ENDPOINT,
       {
         method: "POST",
-        headers: {
-          "Content-Type": contentType,
-        },
-        body: bodyBuffer,
+        body: outboundForm,
       },
       25000,
     );
@@ -381,6 +404,15 @@ function buildAdminEmail(fields, backendResult) {
   const safeBackendMessage = escapeHtml(
     backendResult?.message || "Application submitted to backend successfully.",
   );
+  const safeNoticeVersion = escapeHtml(
+    fields.legal_notice_version || "Not provided",
+  );
+  const safeConsentRecordedAt = escapeHtml(
+    fields.consent_recorded_at || "Not provided",
+  );
+  const safeConsentReceivedAtServer = escapeHtml(
+    fields.consent_received_at_server || "Not provided",
+  );
 
   const text = `
 New online application submitted
@@ -391,6 +423,10 @@ Required entry: ${requiredEntry || "Not provided"}
 
 Guardian 1 Email: ${fields.guardian1_email || "Not provided"}
 Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
+
+Legal notice version: ${fields.legal_notice_version || "Not provided"}
+Electronic consent recorded at: ${fields.consent_recorded_at || "Not provided"}
+Consent received by server at: ${fields.consent_received_at_server || "Not provided"}
 
 Backend result:
 ${backendResult?.message || "Application submitted to backend successfully."}
@@ -408,6 +444,10 @@ ${backendResult?.message || "Application submitted to backend successfully."}
 
       <p><strong>Guardian 1 Email:</strong> ${safeGuardian1}</p>
       <p><strong>Guardian 2 Email:</strong> ${safeGuardian2}</p>
+
+      <p><strong>Legal notice version:</strong> ${safeNoticeVersion}</p>
+      <p><strong>Electronic consent recorded at:</strong> ${safeConsentRecordedAt}</p>
+      <p><strong>Consent received by server at:</strong> ${safeConsentReceivedAtServer}</p>
 
       <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
 
@@ -652,12 +692,6 @@ export async function handler(event) {
     ]);
 
     if (!guardianEmails.length) {
-      await sendFailedApplicationAttemptEmail({
-        fields,
-        files,
-        reason: "No parent/guardian email address was provided.",
-      });
-
       return jsonResponse(400, {
         message: "Please provide at least one parent/guardian email address.",
       });
@@ -672,9 +706,6 @@ export async function handler(event) {
       "guardian1_email",
       "guardian1_name",
       "guardian1_title",
-      "guardian2_email",
-      "guardian2_name",
-      "guardian2_title",
       "legal_custodian",
       "signature_date",
       "capacity_of_signatory",
@@ -685,33 +716,44 @@ export async function handler(event) {
     });
 
     if (missingField) {
-      await sendFailedApplicationAttemptEmail({
-        fields,
-        files,
-        reason: `Missing required field: ${missingField}`,
-      });
-
       return jsonResponse(400, {
         message: "Please complete all required application fields.",
         missingField,
       });
     }
 
+    const missingDeclaration = REQUIRED_DECLARATION_FIELDS.find((fieldName) => {
+      return clean(fields[fieldName]) !== "1";
+    });
+
+    const consentRecordedAt = clean(fields.consent_recorded_at);
+    const consentDateIsValid =
+      consentRecordedAt && !Number.isNaN(Date.parse(consentRecordedAt));
+    const noticeVersionIsValid =
+      clean(fields.legal_notice_version) === LEGAL_NOTICE_VERSION;
+
+    if (
+      missingDeclaration ||
+      !consentDateIsValid ||
+      !noticeVersionIsValid
+    ) {
+      return jsonResponse(400, {
+        message:
+          "Please review and confirm every privacy, authority and terms declaration before submitting.",
+      });
+    }
+
     const recaptcha = await verifyRecaptcha(recaptchaToken);
 
     if (!recaptcha.ok) {
-      await sendFailedApplicationAttemptEmail({
-        fields,
-        files,
-        reason: recaptcha.reason,
-      });
-
       return jsonResponse(400, {
         message: recaptcha.reason,
       });
     }
 
-    const backendResponse = await forwardApplicationToBackend(event);
+    fields.consent_received_at_server = new Date().toISOString();
+
+    const backendResponse = await forwardApplicationToBackend(fields, files);
 
     if (!backendResponse.ok) {
       console.error("Application backend failed:", backendResponse.result);
@@ -801,7 +843,12 @@ export async function handler(event) {
       Best-effort failed attempt email for unexpected errors.
       This will only send if we successfully parsed the form first.
     */
-    if (Object.keys(parsedFields || {}).length) {
+    const hasValidDeclarationRecord =
+      REQUIRED_DECLARATION_FIELDS.every(
+        (fieldName) => clean(parsedFields[fieldName]) === "1",
+      ) && clean(parsedFields.legal_notice_version) === LEGAL_NOTICE_VERSION;
+
+    if (Object.keys(parsedFields || {}).length && hasValidDeclarationRecord) {
       try {
         await sendFailedApplicationAttemptEmail({
           fields: parsedFields,
