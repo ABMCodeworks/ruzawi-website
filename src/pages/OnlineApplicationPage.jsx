@@ -589,10 +589,10 @@ export default function OnlineApplicationPage() {
                     correction, objection or applicable deletion, or withdraw
                     consent free of charge, by emailing{" "}
                     <a
-                      href="mailto:admin@ruzawi.com"
+                      href="mailto:privacy@ruzawi.com"
                       className="font-bold text-[#00582C] underline underline-offset-4"
                     >
-                      admin@ruzawi.com
+                      privacy@ruzawi.com
                     </a>
                     . Read the full{" "}
                     <a

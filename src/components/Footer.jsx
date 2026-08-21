@@ -44,6 +44,13 @@ export default function Footer() {
               </a>
 
               <a
+                href="/privacy-request"
+                className="underline-offset-4 transition hover:text-white hover:underline"
+              >
+                Your Privacy Rights
+              </a>
+
+              <a
                 href="/cookie-policy"
                 className="underline-offset-4 transition hover:text-white hover:underline"
               >

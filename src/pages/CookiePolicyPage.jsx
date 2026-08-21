@@ -221,8 +221,8 @@ export default function CookiePolicyPage() {
                 </h2>
                 <p className="mt-4">
                   Questions about cookies or consent choices may be sent to{" "}
-                  <a href="mailto:admin@ruzawi.com" className={linkClass}>
-                    admin@ruzawi.com
+                  <a href="mailto:privacy@ruzawi.com" className={linkClass}>
+                    privacy@ruzawi.com
                   </a>
                   . We may update this policy and the consent-tool inventory as
                   services change.

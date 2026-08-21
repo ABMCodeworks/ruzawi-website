@@ -59,8 +59,8 @@ export default function PrivacyPolicyPage() {
                 <p className="mt-4">
                   Privacy and data-subject requests may be sent to the Data
                   Protection Officer through{" "}
-                  <a href="mailto:admin@ruzawi.com" className={linkClass}>
-                    admin@ruzawi.com
+                  <a href="mailto:privacy@ruzawi.com" className={linkClass}>
+                    privacy@ruzawi.com
                   </a>{" "}
                   with the subject “Data Protection Request”. Admissions
                   enquiries may be sent to{" "}
@@ -311,7 +311,7 @@ export default function PrivacyPolicyPage() {
                 </p>
                 <p className="mt-4">
                   Suspected personal-data incidents should be reported promptly
-                  to admin@ruzawi.com. Where required, Ruzawi will notify the
+                  to privacy@ruzawi.com. Where required, Ruzawi will notify the
                   Data Protection Authority within 24 hours of becoming aware
                   of a breach and affected individuals within the period
                   required for a likely high-risk breach.
@@ -335,10 +335,15 @@ export default function PrivacyPolicyPage() {
                 <p className="mt-4">
                   Admissions decisions are not made solely by automated
                   processing. To exercise a right, contact us using section 1.
-                  If a concern is not resolved, you may complain to the Data
-                  Protection Authority, which is the Postal and
-                  Telecommunications Regulatory Authority of Zimbabwe (POTRAZ),
-                  through{" "}
+                  You may also use our{" "}
+                  <a href="/privacy-request" className={linkClass}>
+                    online privacy request form
+                  </a>
+                  , which provides a reference and sends the request directly to
+                  the privacy team. If a concern is not resolved, you may
+                  complain to the Data Protection Authority, which is the Postal
+                  and Telecommunications Regulatory Authority of Zimbabwe
+                  (POTRAZ), through{" "}
                   <a
                     href="https://www.potraz.gov.zw/"
                     target="_blank"
