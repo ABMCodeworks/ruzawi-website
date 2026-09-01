@@ -322,9 +322,17 @@ function buildConfirmationEmail(fields) {
   const text = `
 Good day
 
-Thank you. The application for ${applicantName} has been submitted successfully.
+Thank you very much, your application for ${applicantName} has been submitted successfully.
 
-Ruzawi School will contact you if an assessment opportunity arises.
+Assessments are the next stage in the process and will only happen if:
+1. The application process is complete.
+2. There are spaces available in both the classroom and dormitory for the specified year group.
+
+NB: If there are no spaces available, your application will go on a waiting list. As this procedure is automated, a follow-up phone call is not necessary. You will be contacted if an assessment is required.
+
+If the application is for Grade 1 or Grade 3, you will be invited to an Open Day, possibly followed by an assessment.
+
+Grade 1 and Grade 3 assessments happen in the year before the requested year of entry.
 
 Kind regards,
 Ruzawi School
@@ -334,8 +342,15 @@ Ruzawi School
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #10251c;">
       <h2 style="color: #00582C;">Application Submission Successful</h2>
       <p>Good day</p>
-      <p>Thank you. The application for <strong>${safeApplicantName}</strong> has been submitted successfully.</p>
-      <p>Ruzawi School will contact you if an assessment opportunity arises.</p>
+      <p>Thank you very much, your application for <strong>${safeApplicantName}</strong> has been submitted successfully.</p>
+      <p>Assessments are the next stage in the process and will only happen if:</p>
+      <ol>
+        <li>The application process is complete.</li>
+        <li>There are spaces available in both the classroom and dormitory for the specified year group.</li>
+      </ol>
+      <p><strong>NB:</strong> If there are no spaces available, your application will go on a waiting list. As this procedure is automated, a follow-up phone call is not necessary. You will be contacted if an assessment is required.</p>
+      <p>If the application is for Grade 1 or Grade 3, you will be invited to an Open Day, possibly followed by an assessment.</p>
+      <p>Grade 1 and Grade 3 assessments happen in the year before the requested year of entry.</p>
       <p>Kind regards,<br />Ruzawi School</p>
     </div>
   `;
