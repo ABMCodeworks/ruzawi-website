@@ -238,7 +238,7 @@ ${files.map((file) => `- ${file.filename}`).join("\n")}
       from:
         process.env.RESEND_FROM ||
         "Ruzawi Website <website@your-verified-domain.com>",
-      to: process.env.JM_TO_EMAIL || "admin@ruzawi.com",
+      to: process.env.JM_TO_EMAIL || "vengsmash@ruzawi.com",
       replyTo: email,
       subject: `Junior Master/Mistress Application: ${firstName} ${lastName}`,
       text,

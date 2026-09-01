@@ -743,6 +743,14 @@ export async function handler(event) {
       });
     }
 
+    // The admissions API still requires these legacy fields. Keep the more
+    // specific consent records above, then add the compatibility values only
+    // after every declaration has been validated.
+    fields.family_status_or_important_info =
+      clean(fields.family_status_or_important_info) || "None";
+    fields.privacy_consent = "1";
+    fields.parent_authority_confirmed = "1";
+
     const recaptcha = await verifyRecaptcha(recaptchaToken);
 
     if (!recaptcha.ok) {
