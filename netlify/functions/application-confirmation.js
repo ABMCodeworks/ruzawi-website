@@ -73,17 +73,11 @@ function clean(value = "") {
 }
 
 function uniqueEmails(emails = []) {
-  const seen = new Set();
-
-  return emails
-    .map((email) => clean(email).toLowerCase())
-    .filter((email) => {
-      if (!email) return false;
-      if (seen.has(email)) return false;
-
-      seen.add(email);
-      return true;
-    });
+  return [
+    ...new Set(
+      emails.map((email) => clean(email).toLowerCase()).filter(Boolean),
+    ),
+  ];
 }
 
 function getContentType(event) {
@@ -291,7 +285,7 @@ async function forwardApplicationToBackend(fields, files) {
   };
 }
 
-function getStudentName(fields = {}) {
+function getApplicantName(fields = {}) {
   return [
     clean(fields.student_name),
     clean(fields.student_middlename),
@@ -301,40 +295,36 @@ function getStudentName(fields = {}) {
     .join(" ");
 }
 
-function getRequiredEntry(fields = {}) {
-  return [clean(fields.start_month), clean(fields.start_year)]
-    .filter(Boolean)
-    .join(" ");
+function redactEmailAddresses(value = "") {
+  return clean(value).replace(
+    /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,
+    "[email redacted]",
+  );
+}
+
+function getBackendFailureReason(result = {}) {
+  const message =
+    redactEmailAddresses(result?.message) ||
+    "The admissions database rejected the submission.";
+  const missingFields = Array.isArray(result?.missing)
+    ? result.missing.map((field) => clean(field)).filter(Boolean)
+    : [clean(result?.missingField)].filter(Boolean);
+
+  return missingFields.length
+    ? `${message} Missing fields: ${missingFields.join(", ")}.`
+    : message;
 }
 
 function buildConfirmationEmail(fields) {
-  const studentName = getStudentName(fields);
-  const grade = clean(fields.grade) || "Not provided";
-  const requiredEntry = getRequiredEntry(fields);
-
-  const safeStudentName = escapeHtml(studentName || "your child");
-  const safeGrade = escapeHtml(grade);
-  const safeRequiredEntry = escapeHtml(requiredEntry || "Not provided");
+  const applicantName = getApplicantName(fields) || "Applicant";
+  const safeApplicantName = escapeHtml(applicantName);
 
   const text = `
 Good day
 
-Thank you very much, your application submission has been successful.
+Thank you. The application for ${applicantName} has been submitted successfully.
 
-Application details:
-Child: ${studentName || "Not provided"}
-Grade applying for: ${grade}
-Required entry: ${requiredEntry || "Not provided"}
-
-Assessments are the next stage in the process and will only happen if:
-1) The application process is complete.
-2) There are spaces available both in the classroom and dormitory for the specified year group.
-
-NB: If there are no spaces available, your application will go on a waiting list. As this procedure is automated, a follow-up phone call is not necessary. You will be contacted if an assessment is required at any stage.
-
-If this application is for our natural intake years of Grade 1 and Grade 3, you will be invited to an Open Day, possibly followed by an assessment.
-
-Assessments for Grade 1 and Grade 3 happen in the year prior to the year that you have applied for.
+Ruzawi School will contact you if an assessment opportunity arises.
 
 Kind regards,
 Ruzawi School
@@ -342,116 +332,38 @@ Ruzawi School
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #10251c;">
-      <h2 style="color: #00582C;">Ruzawi School Application Submission Successful</h2>
-
+      <h2 style="color: #00582C;">Application Submission Successful</h2>
       <p>Good day</p>
-
-      <p>
-        Thank you very much, your application submission has been successful.
-      </p>
-
-      <div style="background: #f6f1e7; padding: 18px; border-radius: 14px; margin: 22px 0;">
-        <p style="margin: 0 0 8px;"><strong>Child:</strong> ${safeStudentName}</p>
-        <p style="margin: 0 0 8px;"><strong>Grade applying for:</strong> ${safeGrade}</p>
-        <p style="margin: 0;"><strong>Required entry:</strong> ${safeRequiredEntry}</p>
-      </div>
-
-      <p>
-        Assessments are the next stage in the process and will only happen if:
-      </p>
-
-      <ol>
-        <li>The application process is complete.</li>
-        <li>There are spaces available both in the classroom and dormitory for the specified year group.</li>
-      </ol>
-
-      <p>
-        <strong>NB:</strong> If there are no spaces available, your application will go on a waiting list.
-        As this procedure is automated, a follow-up phone call is not necessary.
-        You will be contacted if an assessment is required at any stage.
-      </p>
-
-      <p>
-        If this application is for our natural intake years of <strong>Grade 1 and Grade 3</strong>,
-        you will be invited to an Open Day, possibly followed by an assessment.
-      </p>
-
-      <p>
-        Assessments for Grade 1 and Grade 3 happen in the year prior to the year that you have applied for.
-      </p>
-
+      <p>Thank you. The application for <strong>${safeApplicantName}</strong> has been submitted successfully.</p>
+      <p>Ruzawi School will contact you if an assessment opportunity arises.</p>
       <p>Kind regards,<br />Ruzawi School</p>
     </div>
   `;
 
   return {
-    studentName,
-    grade,
+    applicantName,
     text,
     html,
   };
 }
 
-function buildAdminEmail(fields, backendResult) {
-  const studentName = getStudentName(fields);
-  const requiredEntry = getRequiredEntry(fields);
-
-  const safeStudentName = escapeHtml(studentName || "Not provided");
-  const safeGrade = escapeHtml(fields.grade || "Not provided");
-  const safeGuardian1 = escapeHtml(fields.guardian1_email || "Not provided");
-  const safeGuardian2 = escapeHtml(fields.guardian2_email || "Not provided");
-  const safeStart = escapeHtml(requiredEntry || "Not provided");
-  const safeBackendMessage = escapeHtml(
-    backendResult?.message || "Application submitted to backend successfully.",
-  );
-  const safeNoticeVersion = escapeHtml(
-    fields.legal_notice_version || "Not provided",
-  );
-  const safeConsentRecordedAt = escapeHtml(
-    fields.consent_recorded_at || "Not provided",
-  );
-  const safeConsentReceivedAtServer = escapeHtml(
-    fields.consent_received_at_server || "Not provided",
-  );
+function buildAdminEmail(fields) {
+  const applicantName = getApplicantName(fields) || "Applicant";
+  const safeApplicantName = escapeHtml(applicantName);
 
   const text = `
 New online application submitted
 
-Child: ${studentName || "Not provided"}
-Grade: ${fields.grade || "Not provided"}
-Required entry: ${requiredEntry || "Not provided"}
+Applicant: ${applicantName}
 
-Guardian 1 Email: ${fields.guardian1_email || "Not provided"}
-Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
-
-Legal notice version: ${fields.legal_notice_version || "Not provided"}
-Electronic consent recorded at: ${fields.consent_recorded_at || "Not provided"}
-Consent received by server at: ${fields.consent_received_at_server || "Not provided"}
-
-Backend result:
-${backendResult?.message || "Application submitted to backend successfully."}
+The application was stored successfully. Sign in to the admissions database to review it.
 `.trim();
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #10251c;">
       <h2 style="color: #00582C;">New Online Application Submitted</h2>
-
-      <p><strong>Child:</strong> ${safeStudentName}</p>
-      <p><strong>Grade:</strong> ${safeGrade}</p>
-      <p><strong>Required entry:</strong> ${safeStart}</p>
-
-      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
-
-      <p><strong>Guardian 1 Email:</strong> ${safeGuardian1}</p>
-      <p><strong>Guardian 2 Email:</strong> ${safeGuardian2}</p>
-
-      <p><strong>Legal notice version:</strong> ${safeNoticeVersion}</p>
-      <p><strong>Electronic consent recorded at:</strong> ${safeConsentRecordedAt}</p>
-      <p><strong>Consent received by server at:</strong> ${safeConsentReceivedAtServer}</p>
-
-      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
-
-      <p><strong>Backend result:</strong> ${safeBackendMessage}</p>
+      <p><strong>Applicant:</strong> ${safeApplicantName}</p>
+      <p>The application was stored successfully. Sign in to the admissions database to review it.</p>
     </div>
   `;
 
@@ -462,87 +374,25 @@ ${backendResult?.message || "Application submitted to backend successfully."}
 }
 
 function buildFailedApplicationAttemptEmail({
-  fields = {},
-  files = [],
-  reason = "Unknown error.",
-  backend = null,
+  applicantName = "Applicant",
+  stage = "Submission processing",
+  reason = "The submission could not be completed.",
 }) {
-  const studentName = getStudentName(fields);
-  const requiredEntry = getRequiredEntry(fields);
-
-  const guardianEmails = uniqueEmails([
-    fields.guardian1_email,
-    fields.guardian2_email,
-  ]);
-
   const submittedAt = new Date().toISOString();
-
-  const fileSummary = files.length
-    ? files
-        .map((file) => {
-          const sizeMb = file.sizeBytes
-            ? `${(file.sizeBytes / 1024 / 1024).toFixed(2)} MB`
-            : "Unknown size";
-
-          return `${file.fieldName}: ${file.filename} (${file.contentType || "unknown type"}, ${sizeMb})`;
-        })
-        .join("\n")
-    : "No files received or files could not be read.";
-
-  const backendSummary = backend
-    ? JSON.stringify(backend, null, 2)
-    : "No backend response available.";
+  const displayApplicantName = clean(applicantName) || "Applicant";
+  const safeApplicantName = escapeHtml(displayApplicantName);
+  const safeReason = escapeHtml(redactEmailAddresses(reason));
 
   const text = `
 Failed online application attempt
 
+Applicant: ${displayApplicantName}
 Submitted at: ${submittedAt}
+Stage: ${stage}
+Reason: ${redactEmailAddresses(reason)}
 
-Failure reason:
-${reason}
-
-Child: ${studentName || "Not provided"}
-Grade: ${fields.grade || "Not provided"}
-Required entry: ${requiredEntry || "Not provided"}
-
-Guardian 1 Name: ${fields.guardian1_name || "Not provided"}
-Guardian 1 Email: ${fields.guardian1_email || "Not provided"}
-Guardian 1 Phone: ${fields.guardian1_phone || "Not provided"}
-
-Guardian 2 Name: ${fields.guardian2_name || "Not provided"}
-Guardian 2 Email: ${fields.guardian2_email || "Not provided"}
-Guardian 2 Phone: ${fields.guardian2_phone || "Not provided"}
-
-Parent/guardian emails detected:
-${guardianEmails.length ? guardianEmails.join(", ") : "None"}
-
-Files received:
-${fileSummary}
-
-Backend response:
-${backendSummary}
+No other applicant information, uploaded-file information or database response is included in this email.
 `.trim();
-
-  const htmlFiles = files.length
-    ? files
-        .map((file) => {
-          const sizeMb = file.sizeBytes
-            ? `${(file.sizeBytes / 1024 / 1024).toFixed(2)} MB`
-            : "Unknown size";
-
-          return `
-            <li>
-              <strong>${escapeHtml(file.fieldName)}:</strong>
-              ${escapeHtml(file.filename)}
-              <br />
-              <span style="color: #666;">
-                ${escapeHtml(file.contentType || "unknown type")} — ${escapeHtml(sizeMb)}
-              </span>
-            </li>
-          `;
-        })
-        .join("")
-    : "<li>No files received or files could not be read.</li>";
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #10251c;">
@@ -553,59 +403,25 @@ ${backendSummary}
       </p>
 
       <div style="background: #fff1f0; border: 1px solid #ffccc7; padding: 18px; border-radius: 14px; margin: 22px 0;">
+        <p style="margin: 0 0 8px;"><strong>Applicant:</strong> ${safeApplicantName}</p>
         <p style="margin: 0 0 8px;"><strong>Submitted at:</strong> ${escapeHtml(submittedAt)}</p>
-        <p style="margin: 0;"><strong>Failure reason:</strong> ${escapeHtml(reason)}</p>
+        <p style="margin: 0 0 8px;"><strong>Stage:</strong> ${escapeHtml(stage)}</p>
+        <p style="margin: 0;"><strong>Reason:</strong> ${safeReason}</p>
       </div>
-
-      <h3 style="color: #00582C;">Application details</h3>
-
-      <p><strong>Child:</strong> ${escapeHtml(studentName || "Not provided")}</p>
-      <p><strong>Grade:</strong> ${escapeHtml(fields.grade || "Not provided")}</p>
-      <p><strong>Required entry:</strong> ${escapeHtml(requiredEntry || "Not provided")}</p>
-
-      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
-
-      <h3 style="color: #00582C;">Parent/guardian details</h3>
-
-      <p><strong>Guardian 1 Name:</strong> ${escapeHtml(fields.guardian1_name || "Not provided")}</p>
-      <p><strong>Guardian 1 Email:</strong> ${escapeHtml(fields.guardian1_email || "Not provided")}</p>
-      <p><strong>Guardian 1 Phone:</strong> ${escapeHtml(fields.guardian1_phone || "Not provided")}</p>
-
-      <p><strong>Guardian 2 Name:</strong> ${escapeHtml(fields.guardian2_name || "Not provided")}</p>
-      <p><strong>Guardian 2 Email:</strong> ${escapeHtml(fields.guardian2_email || "Not provided")}</p>
-      <p><strong>Guardian 2 Phone:</strong> ${escapeHtml(fields.guardian2_phone || "Not provided")}</p>
-
-      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
-
-      <h3 style="color: #00582C;">Files received</h3>
-      <ul>
-        ${htmlFiles}
-      </ul>
-
-      <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
-
-      <h3 style="color: #00582C;">Backend response</h3>
-
-      <pre style="white-space: pre-wrap; background: #f6f1e7; padding: 14px; border-radius: 10px; font-size: 13px;">${escapeHtml(
-        backendSummary,
-      )}</pre>
+      <p>No other applicant information, uploaded-file information or database response is included in this email.</p>
     </div>
   `;
 
   return {
-    studentName,
-    grade: clean(fields.grade),
-    guardianEmails,
     text,
     html,
   };
 }
 
 async function sendFailedApplicationAttemptEmail({
-  fields = {},
-  files = [],
-  reason = "Unknown error.",
-  backend = null,
+  applicantName,
+  stage,
+  reason,
 }) {
   const to =
     process.env.APPLICATION_FAILED_EMAIL || process.env.APPLICATION_ADMIN_EMAIL;
@@ -618,22 +434,18 @@ async function sendFailedApplicationAttemptEmail({
   }
 
   const failedEmail = buildFailedApplicationAttemptEmail({
-    fields,
-    files,
+    applicantName,
+    stage,
     reason,
-    backend,
   });
-
-  const subjectName =
-    failedEmail.studentName || failedEmail.grade || "Unknown applicant";
 
   const sendResult = await resend.emails.send({
     from:
       process.env.RESEND_FROM ||
       "Ruzawi Website <website@your-verified-domain.com>",
     to,
-    replyTo: failedEmail.guardianEmails[0] || "registrar@ruzawi.com",
-    subject: `Failed Online Application Attempt - ${subjectName}`,
+    replyTo: "registrar@ruzawi.com",
+    subject: "Failed Online Application Attempt",
     text: failedEmail.text,
     html: failedEmail.html,
   });
@@ -645,7 +457,6 @@ async function sendFailedApplicationAttemptEmail({
 
 export async function handler(event) {
   let parsedFields = {};
-  let parsedFiles = [];
 
   if (event.httpMethod === "OPTIONS") {
     return {
@@ -669,7 +480,6 @@ export async function handler(event) {
     const { fields, files } = await parseMultipartForm(event);
 
     parsedFields = fields;
-    parsedFiles = files;
 
     const website = clean(fields.website);
     const recaptchaToken = clean(fields.recaptchaToken);
@@ -767,12 +577,9 @@ export async function handler(event) {
       console.error("Application backend failed:", backendResponse.result);
 
       await sendFailedApplicationAttemptEmail({
-        fields,
-        files,
-        reason:
-          backendResponse.result?.message ||
-          "The application could not be submitted to the application database.",
-        backend: backendResponse.result,
+        applicantName: getApplicantName(fields),
+        stage: "Application database submission",
+        reason: getBackendFailureReason(backendResponse.result),
       });
 
       return jsonResponse(backendResponse.status || 500, {
@@ -791,21 +598,19 @@ export async function handler(event) {
         "Ruzawi Website <website@your-verified-domain.com>",
       to: guardianEmails,
       replyTo: "registrar@ruzawi.com",
-      subject: `Ruzawi School Application Submission Successful - ${
-        confirmationEmail.studentName || confirmationEmail.grade
-      }`,
+      subject: `Ruzawi School Application Submitted - ${confirmationEmail.applicantName}`,
       text: confirmationEmail.text,
       html: confirmationEmail.html,
     });
 
     if (guardianSendResult.error) {
       await sendFailedApplicationAttemptEmail({
-        fields,
-        files,
-        reason:
+        applicantName: getApplicantName(fields),
+        stage: "Applicant confirmation email",
+        reason: redactEmailAddresses(
           guardianSendResult.error.message ||
-          "Application was submitted to the backend, but the confirmation email could not be sent.",
-        backend: backendResponse.result,
+            "The confirmation email could not be delivered.",
+        ),
       });
 
       throw new Error(
@@ -815,17 +620,15 @@ export async function handler(event) {
     }
 
     if (process.env.APPLICATION_ADMIN_EMAIL) {
-      const adminEmail = buildAdminEmail(fields, backendResponse.result);
+      const adminEmail = buildAdminEmail(fields);
 
       const adminSendResult = await resend.emails.send({
         from:
           process.env.RESEND_FROM ||
           "Ruzawi Website <website@your-verified-domain.com>",
         to: process.env.APPLICATION_ADMIN_EMAIL,
-        replyTo: guardianEmails[0],
-        subject: `Online Application Submitted - ${
-          confirmationEmail.studentName || confirmationEmail.grade
-        }`,
+        replyTo: "registrar@ruzawi.com",
+        subject: `Online Application Submitted - ${confirmationEmail.applicantName}`,
         text: adminEmail.text,
         html: adminEmail.html,
       });
@@ -859,9 +662,9 @@ export async function handler(event) {
     if (Object.keys(parsedFields || {}).length && hasValidDeclarationRecord) {
       try {
         await sendFailedApplicationAttemptEmail({
-          fields: parsedFields,
-          files: parsedFiles,
-          reason: message,
+          applicantName: getApplicantName(parsedFields),
+          stage: "Application processing",
+          reason: redactEmailAddresses(message),
         });
       } catch (emailError) {
         console.error(
