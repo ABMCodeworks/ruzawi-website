@@ -457,7 +457,10 @@ export default function OnlineApplicationPage() {
 
                   <ul className="mt-5 list-disc space-y-3 pl-6 leading-7 text-[#35443a]">
                     <li>A copy of your child’s birth certificate</li>
-                    <li>Your child’s two most recent school reports</li>
+                    <li>
+                      Your child’s two most recent school reports, if available
+                      (optional)
+                    </li>
                     <li>Any educational assessment reports</li>
                     <li>
                       Recent portrait photograph of your child and a family
@@ -556,6 +559,7 @@ export default function OnlineApplicationPage() {
 
           <div className="rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-black/5 md:p-10">
             <form onSubmit={handleSubmit} className="space-y-10">
+              <p className="text-sm text-[#35443a]">Fields marked * are required.</p>
               <section className="rounded-[2rem] bg-[#B6D7E7]/35 p-6 ring-1 ring-[#47778D]/20 md:p-8">
                 <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#47778D]">
                   Admissions privacy notice
@@ -626,6 +630,7 @@ export default function OnlineApplicationPage() {
                     name="family_photo"
                     accept="image/*,.heic,.heif"
                     multiple
+                    required
                     helper={`You can upload up to 2 files. Each file must be under ${MAX_FILE_SIZE_MB}MB.`}
                   />
                 </div>
@@ -691,9 +696,9 @@ export default function OnlineApplicationPage() {
                   </SelectInput>
 
                   <TextInput
-                    label="Religion (optional)"
+                    label="Religion"
                     name="religion"
-                    helper="Provide this only if it is relevant to the child’s admissions or pastoral context."
+                    required
                   />
                 </div>
 
@@ -736,7 +741,7 @@ export default function OnlineApplicationPage() {
                   />
 
                   <FileInput
-                    label="Recent School Report, Grade 2 - 7"
+                    label="Recent School Report, Grade 2 - 7 (optional)"
                     name="recent_report"
                     accept="image/*,.heic,.heif,.pdf"
                     multiple
@@ -821,6 +826,7 @@ export default function OnlineApplicationPage() {
                         label="Cell"
                         name="guardian1_cell"
                         type="tel"
+                        required
                       />
 
                       <TextInput
@@ -923,11 +929,13 @@ export default function OnlineApplicationPage() {
                   <TextInput
                     label="Contact For Above Reference"
                     name="reference_person_1_contact"
+                    required
                   />
 
                   <TextInput
                     label="Contact For Above Reference 2"
                     name="reference_person_2_contact"
+                    required
                   />
                 </div>
               </section>
@@ -945,6 +953,7 @@ export default function OnlineApplicationPage() {
                   <TextInput
                     label="Contact For Above Person"
                     name="person_school_fees_contact"
+                    required
                   />
                 </div>
 

@@ -528,9 +528,23 @@ export async function handler(event) {
       "grade",
       "start_month",
       "start_year",
+      "dob",
+      "sex",
+      "religion",
+      "boarding_preference",
+      "living_situation",
+      "physical_address",
       "guardian1_email",
       "guardian1_name",
       "guardian1_title",
+      "guardian1_cell",
+      "guardian1_physical_address",
+      "reference_person_1",
+      "reference_person_2",
+      "reference_person_1_contact",
+      "reference_person_2_contact",
+      "person_school_fees",
+      "person_school_fees_contact",
       "legal_custodian",
       "signature_date",
       "capacity_of_signatory",
@@ -544,6 +558,24 @@ export async function handler(event) {
       return jsonResponse(400, {
         message: "Please complete all required application fields.",
         missingField,
+      });
+    }
+
+    const requiredFiles = [
+      "photo",
+      "family_photo",
+      "birth_certificate_copy",
+      "proof_of_payment",
+    ];
+
+    const missingFile = requiredFiles.find((fieldName) => {
+      return !files.some((file) => file.fieldName === fieldName && file.sizeBytes > 0);
+    });
+
+    if (missingFile) {
+      return jsonResponse(400, {
+        message: "Please upload all required application documents.",
+        missingField: missingFile,
       });
     }
 
