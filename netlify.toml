@@ -7,6 +7,16 @@
   node_bundler = "esbuild"
 
 [[redirects]]
+  from = "/online-application/"
+  to = "/online-applications"
+  status = 301
+
+[[redirects]]
+  from = "/online-application"
+  to = "/online-applications"
+  status = 301
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
