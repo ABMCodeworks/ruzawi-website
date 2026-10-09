@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { Buffer } from "node:buffer";
 import process from "node:process";
+import { getReportError } from "../../src/utils/anonymousReportValidation.js";
 
 const MAX_BODY_BYTES = 64000;
 
@@ -37,11 +38,15 @@ export async function handler(event) {
   }
   if (fields.website) return response(200, "Report received.", true);
 
+  const allowedFields = ["report", "recaptchaToken", "website"];
+  if (Object.keys(fields).some((key) => !allowedFields.includes(key))) {
+    return response(400, "Only the report text and CAPTCHA are accepted. Files cannot be attached.");
+  }
+
   const report = typeof fields.report === "string" ? fields.report.trim() : "";
   const token = typeof fields.recaptchaToken === "string" ? fields.recaptchaToken.trim() : "";
-  if (!report || report.length > 10000) {
-    return response(400, "Please enter a report of up to 10,000 characters.");
-  }
+  const reportError = getReportError(report);
+  if (reportError) return response(400, reportError);
   if (!token || token.length > 10000) return response(400, "Please complete the CAPTCHA.");
 
   if (!process.env.RECAPTCHA_SECRET_KEY || !process.env.RESEND_API_KEY || !process.env.RESEND_FROM) {

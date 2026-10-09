@@ -42,6 +42,20 @@ test("anonymous reporting validates CAPTCHA and sends only the report", async (t
   assert.equal((await submit({}, { body: "x".repeat(64001) })).statusCode, 413);
   assert.equal((await submit({}, { httpMethod: "GET" })).statusCode, 405);
   assert.equal((await submit({}, { headers: { "content-type": "text/plain" } })).statusCode, 415);
+  assert.equal((await submit({}, { headers: { "content-type": "multipart/form-data; boundary=test" } })).statusCode, 415);
+  for (const report of [
+    "See https://example.com/file.exe", "www.example.com", "example.com",
+    "https://example.com", "//example.com", "192.0.2.1/file",
+    "mailto:someone@example.com", "data:application/octet-stream;base64,AAAA",
+    "javascript:alert(1)", "file:///tmp/file", "\\\\server\\file",
+    "[download](/file)", '<img src="/file">', '<script>alert(1)</script>',
+    "https%3A%2F%2Fexample%2Ecom", "exam\u200bple.com", "ｅｘａｍｐｌｅ．ｃｏｍ",
+  ]) {
+    assert.equal((await submit({ report })).statusCode, 400, report);
+  }
+  for (const extra of [{ attachments: [] }, { file: "payload" }, { html: "<b>report</b>" }, { email: "private@example.com" }]) {
+    assert.equal((await submit(extra)).statusCode, 400);
+  }
   assert.equal((await submit({ website: "spam" })).statusCode, 200);
   assert.equal(calls.length, 0);
 
@@ -50,7 +64,7 @@ test("anonymous reporting validates CAPTCHA and sends only the report", async (t
   assert.equal(calls.length, 1);
   captchaValid = true;
   calls.length = 0;
-  const result = await submit({ email: "private@example.com", name: "Private name", ip: "192.0.2.1" });
+  const result = await submit();
   assert.equal(result.statusCode, 200);
   assert.equal(JSON.parse(result.body).success, true);
   assert.equal(result.headers["Cache-Control"], "no-store");
@@ -60,6 +74,8 @@ test("anonymous reporting validates CAPTCHA and sends only the report", async (t
   assert.equal(email.to, "administrator@ruzawi.com");
   assert.equal(email.reply_to, undefined);
   assert.equal(email.replyTo, undefined);
+  assert.equal(email.attachments, undefined);
+  assert.equal(email.html, undefined);
   assert.match(email.text, /A concern to investigate/);
   assert.doesNotMatch(JSON.stringify(email), /private@example|Private name|192\.0\.2\.1|test-token|identity/);
 

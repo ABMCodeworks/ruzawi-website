@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import TopBar from "../components/TopBar";
 import Footer from "../components/Footer";
+import { getReportError } from "../utils/anonymousReportValidation";
 
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 const MAX_LENGTH = 10000;
@@ -25,8 +26,9 @@ export default function AnonymousReportPage() {
     const form = event.currentTarget;
     const fields = new FormData(form);
     const report = String(fields.get("report") || "").trim();
-    if (!report) {
-      reportRef.current.setCustomValidity("Please enter your report.");
+    const reportError = getReportError(report);
+    if (reportError) {
+      reportRef.current.setCustomValidity(reportError);
       reportRef.current.reportValidity();
       return;
     }
@@ -111,7 +113,7 @@ export default function AnonymousReportPage() {
                 className="w-full rounded-2xl border border-black/15 bg-[#f6f1e7]/50 px-4 py-4 outline-none transition focus:border-[#47778D] focus:ring-4 focus:ring-[#B6D7E7]/50"
               />
             </label>
-            <p id="report-help" className="text-sm leading-6 text-[#35443a]">Include what happened, when and where, and any details that would help the school understand. Maximum 10,000 characters.</p>
+            <p id="report-help" className="text-sm leading-6 text-[#35443a]">Include what happened, when and where, and any details that would help the school understand. Plain text only: no links, HTML or file attachments. Maximum 10,000 characters.</p>
 
             {SITE_KEY ? (
               <ReCAPTCHA
