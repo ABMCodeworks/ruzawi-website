@@ -2,7 +2,7 @@ import SectionIntro from "./SectionIntro";
 import ImageLinkCard from "./ImageLinkCard";
 import { footerButtons } from "../data/siteData";
 
-export default function Footer() {
+export default function Footer({ showCookieSettings = true }) {
   return (
     <footer className="bg-[#47778D] px-6 py-20 text-white lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -57,16 +57,16 @@ export default function Footer() {
                 Cookie Policy
               </a>
 
-              <button
+              {showCookieSettings && <button
                 type="button"
                 className="ch2-open-settings-btn underline-offset-4 transition hover:text-white hover:underline"
               >
                 Cookie settings
-              </button>
+              </button>}
             </nav>
           </div>
 
-          <p className="mt-4 max-w-4xl text-xs leading-6 text-white/70">
+          {showCookieSettings && <p className="mt-4 max-w-4xl text-xs leading-6 text-white/70">
             Optional analytics, including Google Analytics and Microsoft
             Clarity, load only when you allow analytics cookies. You can change
             that choice at any time using “Cookie settings”.{" "}
@@ -77,7 +77,7 @@ export default function Footer() {
               Read our Privacy Policy
             </a>
             .
-          </p>
+          </p>}
         </div>
       </div>
     </footer>

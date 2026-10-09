@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import TopBar from "../components/TopBar";
+import Footer from "../components/Footer";
 
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 const MAX_LENGTH = 10000;
@@ -75,13 +77,10 @@ export default function AnonymousReportPage() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-10 text-[#10251c] sm:px-6 sm:py-16">
+    <>
+      <TopBar solid />
+    <main className="min-h-screen px-4 pb-10 pt-36 text-[#10251c] sm:px-6 sm:pb-16 sm:pt-40">
       <div className="mx-auto max-w-3xl">
-        <header className="mb-8 flex items-center gap-4">
-          <img src="/images/ruzawi-logo.webp" alt="Ruzawi School" className="h-20 w-auto" />
-          <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#00582C]">Ruzawi School</p>
-        </header>
-
         <section className="rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-10">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#47778D]">Share a concern</p>
           <h1 className="mt-4 font-serif text-4xl font-semibold text-[#00582C] sm:text-5xl">Anonymous report</h1>
@@ -142,5 +141,7 @@ export default function AnonymousReportPage() {
         </section>
       </div>
     </main>
+      <Footer showCookieSettings={false} />
+    </>
   );
 }

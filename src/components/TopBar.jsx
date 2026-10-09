@@ -3,7 +3,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
 import MainMenu from "./MainMenu";
 
-export default function TopBar() {
+export default function TopBar({ solid = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -21,7 +21,7 @@ export default function TopBar() {
   return (
     <>
       <header
-        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${scrolled
+        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${scrolled || solid
             ? "bg-[#47778D]/95 shadow-xl backdrop-blur"
             : "bg-transparent"
           }`}
