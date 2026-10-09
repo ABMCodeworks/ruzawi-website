@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AcademicLifePage from "./pages/AcademicLifePage";
 import BoardingLifePage from "./pages/BoardingLifePage";
@@ -21,6 +21,11 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfUsePage from "./pages/TermsOfUsePage";
 import CookiePolicyPage from "./pages/CookiePolicyPage";
 import PrivacyRequestPage from "./pages/PrivacyRequestPage";
+
+function LegacyApplicationRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={`/online-applications${search}${hash}`} replace />;
+}
 
 export default function App() {
   return (
@@ -46,6 +51,10 @@ export default function App() {
         />
         <Route path="/ropa-and-alumni" element={<RopaPage />} />
         <Route path="/magazines" element={<MagazinesPage />} />
+        <Route
+          path="/online-application"
+          element={<LegacyApplicationRedirect />}
+        />
         <Route
           path="/online-applications"
           element={<OnlineApplicationPage />}
