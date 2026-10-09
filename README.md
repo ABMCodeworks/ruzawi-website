@@ -2,6 +2,13 @@
 
 ## Anonymous reporting
 
+Reporting is disabled by default. Set `VITE_ANON_REPORT_ENABLED=true` to enable
+both the page and submission endpoint. Any other value, including an unset
+variable, disables them. Configure this variable for both builds and functions
+in Netlify, then redeploy when changing it. Locally, set it in `.env` and restart
+Vite. While disabled, the form and CAPTCHA are not rendered and the endpoint
+returns 404 without processing or sending reports.
+
 `/anon-report` is a separate HTML entry so the main site's analytics and session
 recording scripts never load on the reporting page. There are no navigation or
 sitemap links. HTML metadata and Netlify response headers tell search engines not

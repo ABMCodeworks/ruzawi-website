@@ -18,6 +18,9 @@ function response(statusCode, message, success = false) {
 }
 
 export async function handler(event) {
+  if (process.env.VITE_ANON_REPORT_ENABLED !== "true") {
+    return response(404, "This page is currently unavailable.");
+  }
   if (event.httpMethod !== "POST") return response(405, "Method not allowed.");
   const contentType = event.headers?.["content-type"] || event.headers?.["Content-Type"] || "";
   if (contentType.split(";")[0].trim().toLowerCase() !== "application/json") {

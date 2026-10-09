@@ -4,8 +4,22 @@ import process from "node:process";
 import { test } from "node:test";
 import { handler } from "../netlify/functions/anon-report.js";
 
+test("reporting is disabled unless explicitly enabled", async (t) => {
+  const savedEnv = { ...process.env };
+  t.after(() => { process.env = savedEnv; });
+  t.mock.method(globalThis, "fetch", () => { throw new Error("Disabled reporting must not make network requests"); });
+  for (const value of [undefined, "false", "", "TRUE"]) {
+    if (value === undefined) delete process.env.VITE_ANON_REPORT_ENABLED;
+    else process.env.VITE_ANON_REPORT_ENABLED = value;
+    const result = await handler({ httpMethod: "POST", body: "{}" });
+    assert.equal(result.statusCode, 404);
+    assert.equal(JSON.parse(result.body).success, false);
+  }
+});
+
 test("anonymous reporting validates CAPTCHA and sends only the report", async (t) => {
   const savedEnv = { ...process.env };
+  process.env.VITE_ANON_REPORT_ENABLED = "true";
   process.env.RECAPTCHA_SECRET_KEY = "test-secret";
   process.env.RESEND_API_KEY = "test-key";
   process.env.RESEND_FROM = "School <website@example.com>";
